@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from fyords import __version__
 
 long_description = ''
@@ -14,5 +14,5 @@ setup(name='fyords',
     author='Chris Pryer',
     author_email='christophpryer@gmail.com',
     license='PUBLIC',
-    packages=['fyords'],
+    packages=find_packages(),
     zip_safe=False)
