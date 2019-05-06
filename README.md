@@ -85,11 +85,8 @@ forecasting.
 The *linear_solver* employs solutions to [linear programming](https://en.wikipedia.org/wiki/Linear_programming)
 problems.
 
-### Normalize (helper)
-Grouped modules for normalization of data. This spans [statistical](https://en.wikipedia.org/wiki/Normalization)
-and [manipulative](https://en.wikipedia.org/wiki/Database_normalization)
-methodologies, and the modules are not limited to preprocessing or database
-management.
+### Preprocess (helper)
+Name-space for preprocessing data.
 
 ### Quant (TBD)
 *quant* is aimed at providing [financial engineering](https://en.wikipedia.org/wiki/Financial_engineering)
