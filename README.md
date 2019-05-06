@@ -117,3 +117,14 @@ objects.
 ### Visualize (TBD)
 *visualize* is aimed at providing helpful [data visualization](https://en.wikipedia.org/wiki/Data_visualization)
 suites.
+
+## Collaborating
+Since this is a learning project, the code will be developed with the
+intention of solving a real-world problem pertaining to the developer. This
+will impact the evolution of this library's design. An example of this taylored
+design would be the module in the *constraint_solver* name-space. This
+name-space is intended to house a constraint programming engine with
+problem-agnostic design. Early on a *routing.py* module will house specified
+modeling such as *DedicatedFleet* and *AmbiguousFleet*. It is required for this
+evolution of design strategy to be followed if you would like to collaborate.
+Each problem-set must be developed in its own feature branch.
