@@ -1,5 +1,5 @@
-# pryords
-A library for operations research and data science.
+# fyords
+A library for operations research, data science, and financial engineering.
 
 ## Domain
 The intended use of this code is for logistics-oriented problems but is not
@@ -11,11 +11,12 @@ development purposes.
 
 ### Subjects:
 1. [Open-source software development](https://en.wikipedia.org/wiki/Open-source_software_development).
-2. [Data Science](https://en.wikipedia.org/wiki/Data_science) in Python.
+2. [Data Science](https://en.wikipedia.org/wiki/Data_science).
 3. [Operations Research](https://en.wikipedia.org/wiki/Operations_research).
-4. [Visualizations](https://en.wikipedia.org/wiki/Data_visualization) in Python
+4. [Financial Engineering](https://en.wikipedia.org/wiki/Financial_engineering).
+5. [Visualizations](https://en.wikipedia.org/wiki/Data_visualization) in Python
 or JavaScript.
-5. Comprehensive self-education of tools such as [NumPy](https://en.wikipedia.org/wiki/NumPy),
+6. Comprehensive self-education of tools such as [NumPy](https://en.wikipedia.org/wiki/NumPy),
 [Pandas](https://en.wikipedia.org/wiki/Pandas_(software)),
 [D3.js](https://en.wikipedia.org/wiki/D3.js),
 [Matplotlib](https://en.wikipedia.org/wiki/Matplotlib),
@@ -77,6 +78,17 @@ management.
 for demand forecasting.
 2. [Regression](https://en.wikipedia.org/wiki/Regression_analysis) for demand
 forecasting.
+
+### Quant
+*quant* is aimed at providing [financial engineering](https://en.wikipedia.org/wiki/Financial_engineering)
+modules. *quant* is not limited to specifically [financial applications of
+mathematics](https://en.wikipedia.org/wiki/Mathematical_finance), but
+involves subjects pertaining to the responsibilities of a [quantitative
+analyst](https://en.wikipedia.org/wiki/Quantitative_analyst). There is a lot of
+overlap between OR and quantitative finance. Risk management is a good example
+of this. Various modeling methodologies in quantitative finance share
+similarities with both operations research and data science. For this reason
+*quant* is integrated with this library.
 
 ### Util
 Name-space for organized modules containing generally useful functions and
