@@ -1,0 +1,10 @@
+# files to ignore
+
+# python compiled files
+*.pyc
+
+# python egg metadata
+/*.egg-info
+
+# development environments
+venv/
