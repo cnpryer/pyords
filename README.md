@@ -1,7 +1,5 @@
 # fyords
-A library for operations research, data science, and financial engineering. This
-code contains everything from low level optimization engines to higher level
-helper name-spaces.
+A library for operations research, data science, and financial engineering.
 
 ### Info
 The purpose of developing this library is for personal learning and professional
@@ -31,8 +29,8 @@ or JavaScript.
 
 
 ## The Library
-The code is broken down into relevant name-spaces to handle various logistics
-problems.
+The code provides everything from low level optimization engines to higher level
+helper name-spaces.
 
 ### Cluster (engine)
 *cluster* is aimed at identifying groups in data. See
@@ -96,7 +94,7 @@ management.
 ### Quant (TBD)
 *quant* is aimed at providing [financial engineering](https://en.wikipedia.org/wiki/Financial_engineering)
 modules. *quant* is not limited to specifically [financial applications of
-mathematics](https://en.wikipedia.org/wiki/Mathematical_finance), but
+mathematics](https://en.wikipedia.org/wiki/Mathematical_finance), but also
 involves subjects pertaining to the responsibilities of a [quantitative
 analyst](https://en.wikipedia.org/wiki/Quantitative_analyst). There is a lot of
 overlap between OR and quantitative finance. Risk management is a good example
