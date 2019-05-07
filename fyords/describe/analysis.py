@@ -1,4 +1,4 @@
-class BackhaulTransporation:
+class BackhaulTransportation:
     '''
     Purpose:
         Identify and describe backhaul transportation opportunities.

@@ -1,7 +1,7 @@
-class SupplyChainDesign:
+class TransportationFlow:
     '''
     Purpose:
-        Optimize network of supply chain notes for design purposes.
+        Optimize network flow of supply chain notes for design purposes.
     '''
     def __init__(self):
         pass

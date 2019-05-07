@@ -59,6 +59,10 @@ and more. More detail coming soon.
 ### Describe (helper)
 Grouped modules for descriptive statistics and general analysis of data.
 
+**Current Scope:**
+
+1. Logistics-based opportunities
+
 ### Graph Solver (engine)
 This solver is limited to solutions to
 [graph theory](https://en.wikipedia.org/wiki/Graph_theory) problems.
@@ -79,7 +83,6 @@ techniques.
 for demand forecasting.
 2. [Regression](https://en.wikipedia.org/wiki/Regression_analysis) for demand
 forecasting.
-
 
 ### Linear Solver (engine)
 The *linear_solver* employs solutions to [linear programming](https://en.wikipedia.org/wiki/Linear_programming)
@@ -113,6 +116,11 @@ classifications of simulation.
 ### Util (helper)
 Name-space for organized modules containing generally useful functions and
 objects.
+
+**Current Scope:**
+
+1. Pandas-dataframe-based wrangling
+
 
 ### Visualize (TBD)
 *visualize* is aimed at providing helpful [data visualization](https://en.wikipedia.org/wiki/Data_visualization)
