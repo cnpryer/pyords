@@ -8,6 +8,8 @@ classifications of simulation.
 1. *crossdock.py* - simulate cross-docking.
 2. *schedule.py* - leverage simulated evolution of schedules through a genetic
 algorithm.
+3. *routing.py* - leverage *simulation* algorithms to tackle VRP.
+4. *algorithm.py* - module housing various *simulation* algorithms.
 
 ## Plan
 This module should work more as an engine with various algorithms to perform
