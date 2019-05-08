@@ -28,7 +28,7 @@ class LlamaStage:
             'backend': {}
         }[config]
 
-class LlamaLoader(LlamaStage):
+class LlamaLoader:
     '''
     Purpose:
         Provide assistance to premodeling aligned with an SCGX environment.
@@ -45,10 +45,10 @@ class LlamaLoader(LlamaStage):
     '''
     defaultpath = ('C:/Users/{}/Documents/LLamasoft/Supply Chain Guru'
                 ).format(getlogin())
-    def __init__(self, config:str='frontend', model:str='',
+    def __init__(self, stage:LlamaStage, model:str='',
     scgpath:str=defaultpath, modelpath:str=defaultpath):
         # TODO: use abstraction to handle backend vs frontend differences.
-        LlamaStage.__init__(self, config)
+        self.Stage = stage
         self.configure_scg(model, scgpath, modelpath)
 
     def configure_scg(self, model:str, scgpath:str, modelpath:str):
@@ -112,6 +112,9 @@ class LlamaLoader(LlamaStage):
         # stage the data to the correct location (frontend)
         importpath = '{}/{}_{}_en.xlsx'.format(
             self.modelpath, self.modelname, tablename)
-        template.to_excel(importpath, sheet_name=self.sheets[tablename], index=False)
+        template.to_excel(
+            importpath,
+            sheet_name=self.Stage.sheets[tablename],
+            index=False)
         print('Template import stage (destination): {}'.format(importpath))
         print('{} staging finished'.format(tablename))
