@@ -36,6 +36,19 @@ class DedicatedFleetGA(GeneticAlgorithm):
         self.vehicles = vehicles
         self.penalties = settings['penalties']
 
+    def encode(self):
+        '''
+        Purpose:
+            Encode routes as a list of individuals that represent a set of
+            routes with randomized or clustered stops not including origin.
+            Dedicated models assume return to origin is required. For random
+            individuals the following example occurs:
+                i1 = [[1, 2, 3], [4, 5, 6, 7], []]
+            where individual i1 has two routes that hit both a different number
+            of stops and the stops on each route differ.
+        '''
+        pass
+
     def fitness(self):
         '''
         Purpose:
@@ -45,5 +58,4 @@ class DedicatedFleetGA(GeneticAlgorithm):
 
     def run(self):
         '''manages algorithm'''
-        sample = self.routes[0] # tell GA what an individual looks like
-        population = self.initialize(sample, self.distances)
+        population = self.initialize(self.routes)

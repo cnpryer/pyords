@@ -67,7 +67,7 @@ if __name__ == '__main__':
         settings=settings
     )
 
-    sample = routes[0]
+    # encode problem so that each individual is a sequence of
     population = model.initialize(routes)
     print('TESTING')
     print(population)
