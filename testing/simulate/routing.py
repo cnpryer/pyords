@@ -45,7 +45,7 @@ if __name__ == '__main__':
     vehicles = np.array([45 for i in range(0, 2)])
 
     # TODO: build routes mapping using clustering
-    routes = [[np.nan for seg in loc] for loc in distances]
+    routes = np.array([[np.nan for seg in loc] for loc in distances])
 
     # build GA settings
     settings = {
@@ -53,7 +53,8 @@ if __name__ == '__main__':
         'population_size': 100,
         'crossover_rate': 0.7,
         'mutation_rate': 0.2,
-        'individual_size': 10 # TODO: determine appropriate number for base case
+        'individual_size': 10, # TODO: determine appropriate number for base case
+        'penalties': {} # TODO: define
     }
 
     routes = DedicatedFleetGA(
