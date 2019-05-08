@@ -1,3 +1,4 @@
+import numpy as np
 from .algorithm import GeneticAlgorithm
 
 class DedicatedFleetGA(GeneticAlgorithm):
@@ -11,7 +12,7 @@ class DedicatedFleetGA(GeneticAlgorithm):
         may reduce runtime.
     '''
     def __init__(self, distances:np.array, routes:np.array, windows:np.array, demands:np.array,
-    vehicles:np.array, ):
+    vehicles:np.array, settings:dict):
         '''
         Args:
             distances: matrix of all-to-all distances (defines order).
@@ -21,7 +22,7 @@ class DedicatedFleetGA(GeneticAlgorithm):
             demands: array of demands for each location.
             vehicles: array of capacities representing a vehicle.
         '''
-        GeneticAlgorithm.__init__(self)
+        GeneticAlgorithm.__init__(self, settings)
         self.distances = distances
         self.routes = routes
         self.windows = windows
@@ -29,4 +30,8 @@ class DedicatedFleetGA(GeneticAlgorithm):
         self.vehicles = vehicles
 
     def fitness(self):
+        '''
+        Purpose:
+            Assess the performance of each evolution of the solution
+        '''
         pass
