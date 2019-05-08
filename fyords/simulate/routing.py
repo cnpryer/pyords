@@ -42,3 +42,8 @@ class DedicatedFleetGA(GeneticAlgorithm):
             Assess the performance of each evolution of the solution
         '''
         pass
+
+    def run(self):
+        '''manages algorithm'''
+        sample = self.routes[0] # tell GA what an individual looks like
+        population = self.initialize(sample, self.distances)

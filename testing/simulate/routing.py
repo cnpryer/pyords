@@ -45,7 +45,8 @@ if __name__ == '__main__':
     vehicles = np.array([45 for i in range(0, 2)])
 
     # TODO: build routes mapping using clustering
-    routes = np.array([[np.nan for seg in loc] for loc in distances])
+    # for now initialize with direct shipments
+    routes = np.array([[n] for n in range(1, len(distances))])
 
     # build GA settings
     settings = {
@@ -57,7 +58,7 @@ if __name__ == '__main__':
         'penalties': {} # TODO: define
     }
 
-    routes = DedicatedFleetGA(
+    model = DedicatedFleetGA(
         distances=distances,
         routes=routes,
         windows=windows,
@@ -66,5 +67,7 @@ if __name__ == '__main__':
         settings=settings
     )
 
+    sample = routes[0]
+    population = model.initialize(routes)
     print('TESTING')
-    print(', '.join("%s: %s" % item for item in vars(routes).items()))
+    print(population)
