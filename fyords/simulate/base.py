@@ -9,17 +9,36 @@ class GeneticAlgorithm:
     def __init__(self, settings:dict):
         self.generations = settings['generations']
         self.population_size = settings['population_size']
+        # TODO: figure out why **0.5 doesn't sum to 1.
+        # probability weights
+        w = np.power(np.arange(settings['population_size'], 0, -1), 0.5)
+        # probability percent to use as selection bias
+        self.selection_probabilities = w / w.sum()
         self.crossover_rate = settings['crossover_rate']
         self.mutation_rate = settings['mutation_rate']
 
-    def initialize(self):
+    def selection(self, population:np.array):
         '''
-        TODO:
-            Need to define agnostic initialization. As of now *initialization*
-            is pooled into the encoding of the problem, where encoding refers to
-            the creation of individuals by seeding techniques (random or
-            clustered). This is currently a preproccesing step.
+        Prupose:
+            Fitness-based lottery utilizing pre-sorted population
+
+        Args:
+            population: population: array of individuals for reproduction
+            sorted by fitness.
         '''
+        return np.random.choice(
+            population,
+            size=self.population_size,
+            replace=False,
+            p=self.selection_probabilities
+        )
+
+    def crossover(self):
+        '''basic genetic crossover'''
+        pass
+
+    def mutation(self):
+        '''randomized mutation of genetic material'''
         pass
 
     def reproduce(self, population:np.array):
@@ -27,21 +46,10 @@ class GeneticAlgorithm:
         Purpose:
             Produces new population by selecting individuals to reproduce,
             reproducing via crossover of their genetic material, and randomly
-            applying mutation.
+            applying mutation. These functions as of now are abstracted for
+            testing & development.
 
         Args:
             population: array of individuals for reproduction sorted by fitness.
         '''
-        def selection():
-            '''fitness-based lottery utilizing pre-sorted population'''
-            pass
-
-        def crossover():
-            '''basic genetic crossover'''
-            pass
-
-        def mutation():
-            '''randomized mutation of genetic material'''
-            pass
-            
         pass

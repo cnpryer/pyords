@@ -46,13 +46,20 @@ class DedicatedFleetGA(GeneticAlgorithm):
         self.vehicles = vehicles
         self.penalties = settings['penalties']
 
-    def fitness(self):
+    def fitness(self, individuals:np.array):
         '''
         Purpose:
-            Assess the performance of each evolution of the solution
+            Assess the fitness of individuals and return sorted best to worst.
+
+        Args:
+            data: list of individuals to assess. Typically a full population
+            is passed, but a single individual can be passed as well.
         '''
         pass
 
     def run(self):
         '''manages algorithm'''
+        # TODO: return sorted, fitness assessed population
+        # currently fleshing out the Genetic Algorithm functions first. Then
+        # the model-specific class will be completed.
         pass
