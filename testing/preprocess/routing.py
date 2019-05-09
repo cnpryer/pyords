@@ -1,7 +1,12 @@
-from fyords.preprocess.routing import haversine_distance_matrix
+from fyords.preprocess.routing import (
+    haversine_distance_matrix,
+    encode_random_dedicatedfleet_ga
+)
 import pandas as pd
 import numpy as np
 
+def test_encode_random_dedicatedfleet_ga(data):
+    return encode_random_dedicatedfleet_ga(data, 100)
 
 def test_haversine_distance_matrix(lats, lons):
     return haversine_distance_matrix(
@@ -31,9 +36,19 @@ if __name__ == '__main__':
     )
 
     # haversine
+    distances = test_haversine_distance_matrix(lats, lons)
     x = len(list(zip(lats, lons)))
-    y = len(test_haversine_distance_matrix(lats, lons))
+    y = len(distances)
 
     print(('\nTESTING (haversine_distance_matrix)'
+        '\ninput: {}'
+        '\noutput: {}').format(x,y))
+
+    # dedicatedfleet encoding (random)
+    population = test_encode_random_dedicatedfleet_ga(distances)
+    x = len(distances)
+    y = len(population)
+
+    print(('\nTESTING (encode_random_dedicatedfleet_ga)'
         '\ninput: {}'
         '\noutput: {}').format(x,y))

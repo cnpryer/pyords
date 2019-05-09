@@ -12,17 +12,27 @@ class DedicatedFleetGA(GeneticAlgorithm):
         may reduce runtime. For this first pass the design of this code will be
         simplified.
 
+        Encoding is done as a preprocessing step. Encode routes as a list of
+        individuals where each represents a set of routes with randomized stops
+        not including origin. Dedicated models assume return to origin is
+        required. For random individuals the following encoding is expected:
+            i1 = [[1, 2, 3], [4, 5, 6, 7], []]
+        where individual i1 has two routes that hit both a different number
+        of stops and the stops between each route differ.
+
     TODO:
         The idea is to initialize genetic algorithms with agnostic structures
         that have values used to map back to the data to optimize or simulate.
+        Beyond the initial design the goal is to abstract objects such as
+        individual, population, etc.
     '''
     def __init__(self, distances:np.array, routes:np.array, windows:np.array,
     demands:np.array, vehicles:np.array, settings:dict):
         '''
         Args:
             distances: matrix of all-to-all distances (defines order).
-            routes: matrix of from-origin route mapping. A subest of all-to-all
-            segments are pre-mapped to a given route by their indexes in
+            routes: encoded population containing sets of routes that
+            represent an individual
             distances ([[0, 2, 5, 3, 0], ...]).
             times: array of time windows for each location (follows order).
             demands: array of demands for each location.
@@ -36,19 +46,6 @@ class DedicatedFleetGA(GeneticAlgorithm):
         self.vehicles = vehicles
         self.penalties = settings['penalties']
 
-    def encode(self):
-        '''
-        Purpose:
-            Encode routes as a list of individuals that represent a set of
-            routes with randomized or clustered stops not including origin.
-            Dedicated models assume return to origin is required. For random
-            individuals the following example occurs:
-                i1 = [[1, 2, 3], [4, 5, 6, 7], []]
-            where individual i1 has two routes that hit both a different number
-            of stops and the stops on each route differ.
-        '''
-        pass
-
     def fitness(self):
         '''
         Purpose:
@@ -58,4 +55,4 @@ class DedicatedFleetGA(GeneticAlgorithm):
 
     def run(self):
         '''manages algorithm'''
-        population = self.initialize(self.routes)
+        pass

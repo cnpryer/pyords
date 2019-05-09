@@ -1,11 +1,24 @@
 from fyords.simulate.routing import DedicatedFleetGA
 from fyords.cluster.greenfield import MeanShift
-from fyords.preprocess.routing import haversine_distance_matrix
+from fyords.preprocess.routing import (
+    haversine_distance_matrix,
+    encode_random_dedicatedfleet_ga
+)
 import pandas as pd
 import numpy as np
 
 
 if __name__ == '__main__':
+
+    # build GA settings
+    settings = {
+        'generations': 20,
+        'population_size': 100,
+        'crossover_rate': 0.7,
+        'mutation_rate': 0.2,
+        'individual_size': 10, # TODO: determine appropriate number for base case
+        'penalties': {} # TODO: define
+    }
 
     # generate testing lat and lon data
     n = 10
@@ -45,18 +58,11 @@ if __name__ == '__main__':
     vehicles = np.array([45 for i in range(0, 2)])
 
     # TODO: build routes mapping using clustering
-    # for now initialize with direct shipments
-    routes = np.array([[n] for n in range(1, len(distances))])
-
-    # build GA settings
-    settings = {
-        'generations': 20,
-        'population_size': 100,
-        'crossover_rate': 0.7,
-        'mutation_rate': 0.2,
-        'individual_size': 10, # TODO: determine appropriate number for base case
-        'penalties': {} # TODO: define
-    }
+    # for now initialize with rndom list of route sets
+    routes = encode_random_dedicatedfleet_ga(
+        distances,
+        settings['population_size']
+        )
 
     model = DedicatedFleetGA(
         distances=distances,
@@ -66,8 +72,3 @@ if __name__ == '__main__':
         vehicles=vehicles,
         settings=settings
     )
-
-    # encode problem so that each individual is a sequence of
-    population = model.initialize(routes)
-    print('TESTING')
-    print(population)
