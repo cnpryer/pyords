@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     # append destinations with demand to locations
     locations += list(zip(data.dest_lat.tolist(), data.dest_lon.tolist()))
-    locations = np.array([np.array(loc) for loc in locations]) # convert tuples
+    locations = np.array([loc for loc in locations]) # convert tuples
 
     # build demands
     demands = np.array([0] + data.demand.tolist())
@@ -65,5 +65,5 @@ if __name__ == '__main__':
         )
 
     algo = GeneticAlgorithm(settings)
-    #print(algo.selection_probabilities.sum())
-    print(algo.selection(population))
+    print(population.shape)
+    print(algo.crossover(population).shape)

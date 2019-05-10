@@ -48,12 +48,12 @@ def encode_random_dedicatedfleet_ga(distances:np.array, size:int):
     N = len(distances)-1
     for i in range(0, size): # per individual
         individual = []
-        for j in range(0, random.randint(0, N)): # random len of individual
+        for j in range(0, random.randint(1, N)): # random len of individual
             individual.append(
-                np.random.randint(low=1, high=N, size=(random.randint(0, N),))
+                np.random.randint(low=1, high=N, size=(random.randint(1, N),))
             )
-        population.append(individual)
-    return population
+        population.append(np.array(individual))
+    return np.array(population)
 
 def encode_clustered_dedicatedfleet_ga(data:pd.DataFrame):
     '''

@@ -29,13 +29,44 @@ class GeneticAlgorithm:
         return np.random.choice(
             population,
             size=self.population_size,
-            replace=False,
+            # TODO: determind diveristy
+            #replace=False,
             p=self.selection_probabilities
         )
 
-    def crossover(self):
-        '''basic genetic crossover'''
-        pass
+    def crossover(self, population:np.array):
+        '''
+        Purpose:
+            Basic genetic crossover. First pass version will crossover in
+            pairs over the length of the population.
+
+        population: population: array of individuals for reproduction
+        sorted by fitness.
+        '''
+        cross = np.random.random(self.population_size) < self.crossover_rate
+        new = list(population[np.invert(cross)].copy())
+        print(np.array(new).shape)
+        #print(len(population[cross]))
+        n = int(np.floor(len(population[cross]) / 2)) # n pairs
+        # TODO: might want to retain ordering by fitness evaluation
+        # this would leave the remainder (not crossed pairwise) as the least
+        # ideal individual.
+        for second in range(0, n, 2):
+            for child in range(0, 2):
+                # TODO: probably increasing genetic material
+                A = population[cross][second-1]
+                Ai = np.random.randint(0, A.size)
+                B = population[cross][second]
+                Bi = np.random.randint(0, B.size)
+                Ac = list(A[:Ai])
+                Bc = list(B[:Bi])
+                C = Ac + Bc
+                if len(C) == 1:
+                    C += C
+                elif len(C) == 0:
+                    C = [A, B][np.random.randint(0, 1)]
+                new.append(C)
+        return np.array(new)
 
     def mutation(self):
         '''randomized mutation of genetic material'''
