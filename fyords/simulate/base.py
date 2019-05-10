@@ -45,13 +45,12 @@ class GeneticAlgorithm:
         '''
         cross = np.random.random(self.population_size) < self.crossover_rate
         new = list(population[np.invert(cross)].copy())
-        print(np.array(new).shape)
         #print(len(population[cross]))
-        n = int(np.floor(len(population[cross]) / 2)) # n pairs
+        n = population[cross].size # n pairs
         # TODO: might want to retain ordering by fitness evaluation
         # this would leave the remainder (not crossed pairwise) as the least
         # ideal individual.
-        for second in range(0, n, 2):
+        for second in range(1, n, 2):
             for child in range(0, 2):
                 # TODO: probably increasing genetic material
                 A = population[cross][second-1]
@@ -66,6 +65,8 @@ class GeneticAlgorithm:
                 elif len(C) == 0:
                     C = [A, B][np.random.randint(0, 1)]
                 new.append(C)
+        if n % 2 != 0:
+            new.append(list(population[cross])[-1])
         return np.array(new)
 
     def mutation(self):
