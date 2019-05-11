@@ -80,7 +80,7 @@ class GeneticAlgorithm:
         mutate = np.random.random(self.population_size) < self.mutation_rate
         new = list(population[np.invert(mutate)])
         new += [np.random.shuffle(i) for i in population[mutate]]
-        return mutate
+        return np.array(mutate)
 
     def reproduce(self, population:np.array):
         '''
@@ -93,4 +93,7 @@ class GeneticAlgorithm:
         Args:
             population: array of individuals for reproduction sorted by fitness.
         '''
-        pass
+        population = self.selection(population)
+        population = self.crossover(population)
+        population = self.mutation(population)
+        return population
