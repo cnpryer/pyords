@@ -69,9 +69,18 @@ class GeneticAlgorithm:
             new.append(list(population[cross])[-1])
         return np.array(new)
 
-    def mutation(self):
-        '''randomized mutation of genetic material'''
-        pass
+    def mutation(self, population:np.array):
+        '''
+        Puropse:
+            Randomized mutation of genetic material. To remain abstracted,
+            this function should randimize the properties of each element of
+            an individual. For the first pass it will just shuffle an
+            individuals elements.
+        '''
+        mutate = np.random.random(self.population_size) < self.mutation_rate
+        new = list(population[np.invert(mutate)])
+        new += [np.random.shuffle(i) for i in population[mutate]]
+        return mutate
 
     def reproduce(self, population:np.array):
         '''

@@ -66,4 +66,4 @@ if __name__ == '__main__':
 
     algo = GeneticAlgorithm(settings)
     print(population.shape)
-    print(algo.crossover(population).shape)
+    print(algo.mutation(population).shape)
