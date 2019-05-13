@@ -46,14 +46,15 @@ class DedicatedFleetGA(GeneticAlgorithm):
         self.vehicles = vehicles
         self.penalties = settings['penalties']
 
-    def fitness(self, individuals:np.array):
+    def fitness(self, population:np.array):
         '''
         Purpose:
-            Assess the fitness of individuals and return sorted best to worst.
+            Assess the fitness of each individual in a population and return
+            sorted best to worst.
 
         Args:
-            data: list of individuals to assess. Typically a full population
-            is passed, but a single individual can be passed as well.
+            population: array of individuals to assess. Typically a full
+            population is passed, but a single individual can be passed as well.
         '''
         pass
 
