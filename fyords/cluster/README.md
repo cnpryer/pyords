@@ -7,6 +7,6 @@
 nodes. This is typically used in designing and optimizing supply chains.
 
 ## Plan
-This module should work more as an engine with various algorithms to perform
+This name-space should work more as an engine with various algorithms to perform
 different clustering techniques. Helper code will be abstracted to another
 name-space.

@@ -11,6 +11,6 @@ deliveries, penalties and dropping demand, and ambiguous origins and
 destinations.
 
 ## Plan
-This module should work more as an engine with various algorithms to perform
+This name-space should work more as an engine with various algorithms to perform
 different optimizing techniques. Helper code will be abstracted to another
 name-space.

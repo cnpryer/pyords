@@ -7,6 +7,6 @@ techniques.
 1. *demand.py* - predict demand using various techniques.
 
 ## Plan
-This module should work more as an engine with various algorithms to perform
+This name-space should work more as an engine with various algorithms to perform
 different prediction techniques. Helper code will be abstracted to another
 name-space.

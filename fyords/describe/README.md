@@ -6,5 +6,5 @@ Grouped modules for descriptive statistics and general analysis of data.
 purposes.
 
 ## Plan
-This module should work more as a helper with code to utilize various
+This name-space should work more as a helper with code to utilize various
 techniques related to describing data.

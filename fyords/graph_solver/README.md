@@ -7,6 +7,6 @@ This solver is limited to solutions to
 directional demand data, with limited node constraints.
 
 ## Plan
-This module should work more as an engine with various algorithms to perform
+This name-space should work more as an engine with various algorithms to perform
 different optimizing techniques. Helper code will be abstracted to another
 name-space.

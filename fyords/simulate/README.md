@@ -23,9 +23,8 @@ objects for *simulations* are defined here.
 9. *util/* - name-space for *simulation* helper functions and objects.
 
 ## Plan
-This module should work more as an engine with various algorithms to perform
+This name-space should work more as an engine with various algorithms to perform
 different simulation techniques. Helper code will be abstracted to another
 name-space. Ideal genetic algorithm design will be modeled after
-[evolute](https://github.com/csxeba/evolute). The architecture of evolute will
-be a shared architecture for other *simulate* functionality beyond genetic
-algorithms.
+[evolute](https://github.com/csxeba/evolute). The adopted architecture will
+be a shared one for other *simulate* functionality beyond genetic algorithms.

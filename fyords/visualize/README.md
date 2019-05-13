@@ -6,5 +6,5 @@ suites.
 1. *analysis.py* - various visualization wrappers for analysis.
 
 ## Plan
-This module should work more as a helper with code to utilize various
+This name-space should work more as a helper with code to utilize various
 techniques related to describing data.
