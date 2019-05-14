@@ -1,5 +1,5 @@
 from fyords.constraint_solver.routing import DedicatedFleet
-from fyords.preprocess.routing import haversine_distance_matrix
+from fyords.util.preprocess.routing import haversine_distance_matrix
 import pandas as pd
 import numpy as np
 

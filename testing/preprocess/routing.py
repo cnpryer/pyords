@@ -1,4 +1,4 @@
-from fyords.preprocess.routing import (
+from fyords.util.preprocess.routing import (
     haversine_distance_matrix,
     encode_random_dedicatedfleet_ga
 )

@@ -4,15 +4,12 @@ TODO:
     here or would that not be efficient?
 '''
 from . import cluster
-from . import common
+from . import base
 from . import constraint_solver
-from . import describe
 from . import graph_solver
 from . import learn
 from . import linear_solver
-from . import preprocess
 from . import quant
 from . import simulate
-from . import util
-from . import visualize
+from . import util # maybe expose inner elements of util?
 __version__ = '0.1.1'

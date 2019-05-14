@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-class PandasWrangler:
+class PandasWrapper:
     '''
     Purpose:
         Provide agnostic data wrangling object as a helper for working with

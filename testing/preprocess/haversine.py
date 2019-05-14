@@ -1,4 +1,4 @@
-from fyords.preprocess.distance import haversine, haversine_vectorized
+from fyords.util.preprocess.distance import haversine, haversine_vectorized
 import pandas as pd
 import numpy as np
 

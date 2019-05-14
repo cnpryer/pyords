@@ -3,8 +3,11 @@
 suites.
 
 ## Modules
-1. *analysis.py* - various visualization wrappers for analysis.
+1. *base* - TBD
+2. *plotly* - (TBD) - module for plotly wrapper/helpers
 
 ## Plan
 This name-space should work more as a helper with code to utilize various
 techniques related to describing data.
+
+Name-space design TBD.

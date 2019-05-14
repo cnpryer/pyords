@@ -42,8 +42,8 @@ helper name-spaces.
 1. [Greenfield Analysis](http://supplychaindetective.com/2017/08/12/network-strategy-part-1-greenfield-analysis/) -
 a facility location and operation problem.
 
-### Common (helper)
-Grouped modules for abstracted low level functionality.
+### Base (TBD)
+Grouped modules for abstracted *fyords* functionality.
 
 ### Constraint Solver (engine)
 *constraint_solver* is aimed at providing an optimization engine for
@@ -57,7 +57,7 @@ deliveries, penalties and dropping demand, ambiguous origins and destinations,
 and more. More detail coming soon.
 2. [Employee Scheduling](https://developers.google.com/optimization/scheduling/employee_scheduling).
 
-### Describe (helper)
+### util/Describe (helper)
 Grouped modules for descriptive statistics and general analysis of data.
 
 **Current Scope:**
@@ -89,7 +89,7 @@ forecasting.
 The *linear_solver* employs solutions to [linear programming](https://en.wikipedia.org/wiki/Linear_programming)
 problems.
 
-### Preprocess (helper)
+### util/Preprocess (helper)
 Name-space for preprocessing data.
 
 ### Quant (TBD)
@@ -123,9 +123,12 @@ objects.
 1. Pandas-dataframe-based wrangling
 
 
-### Visualize (TBD)
+### util/Visualize (TBD)
 *visualize* is aimed at providing helpful [data visualization](https://en.wikipedia.org/wiki/Data_visualization)
 suites.
+
+### util/Wrangle
+Name-space for data wrangling wrappers and helpers.
 
 ## Collaborating
 Since this is a learning project, the code will be developed with the

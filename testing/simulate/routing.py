@@ -1,6 +1,6 @@
 from fyords.simulate.routing import DedicatedFleetGA
 from fyords.cluster.greenfield import MeanShift
-from fyords.preprocess.routing import (
+from fyords.util.preprocess.routing import ( # example of specified package use
     haversine_distance_matrix,
     encode_random_dedicatedfleet_ga
 )

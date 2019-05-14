@@ -1,4 +1,4 @@
-from fyords.preprocess.scgx import LlamaLoader, LlamaStage
+from fyords.util.preprocess.scgx import LlamaLoader, LlamaStage
 import pandas as pd
 import logging
 

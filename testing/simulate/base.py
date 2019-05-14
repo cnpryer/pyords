@@ -1,5 +1,5 @@
 from fyords.simulate.base import GeneticAlgorithm
-from fyords.preprocess.routing import (
+from fyords.util.preprocess import ( # example of exposed preprocess elements
     haversine_distance_matrix,
     encode_random_dedicatedfleet_ga
 )
