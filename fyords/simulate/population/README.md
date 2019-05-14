@@ -6,6 +6,7 @@ objects for *simulations* are defined here.
 1. *base* - *population* name-space wrapper module.
 2. *individual* - module defining elements of populations and their specific
 composition profile.
+3. *initialization* - module defining initialization types for populations.
 
 ## Plan
 Ideally the elements of this name-space will be exposed within its instance

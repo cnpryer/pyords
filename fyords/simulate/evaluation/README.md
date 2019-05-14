@@ -5,6 +5,7 @@ performance grading, etc. are defined here.
 ## Modules
 1. *base* - evaluation module used as a wrapper to the name-space.
 2. *fitness* - currently fitness evaluation module for genetic algorithms.
+3. *grading* - module defining grading types for evaluations.
 
 ## Plan
 (TBD) - as of now a fitness function will be initialized with the fitness

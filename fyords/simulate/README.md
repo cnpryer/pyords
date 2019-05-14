@@ -28,3 +28,6 @@ different simulation techniques. Helper code will be abstracted to another
 name-space. Ideal genetic algorithm design will be modeled after
 [evolute](https://github.com/csxeba/evolute). The adopted architecture will
 be a shared one for other *simulate* functionality beyond genetic algorithms.
+In addition to having inspiration from evolute, *simulate* (along with the
+remainder of fyords) has plenty of inspiration from
+[Google OR Tools](https://developers.google.com/optimization/).
