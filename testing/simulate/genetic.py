@@ -1,4 +1,10 @@
-from fyords.simulate.base import GeneticAlgorithm
+from fyords.simulate.population import GeneticPopulation
+from fyords.simulate.evaluation import SimpleFitness
+from fyords.simulate.operation import (
+    SimpleSelection,
+    SimpleCrossover,
+    SimpleMutation
+)
 from fyords.util.preprocess import ( # example of exposed preprocess elements
     haversine_distance_matrix,
     encode_random_dedicatedfleet_ga
@@ -64,6 +70,9 @@ if __name__ == '__main__':
         settings['population_size']
         )
 
-    algo = GeneticAlgorithm(settings)
+    # Initializing the GeneticPopulation without passing
+    # any configuration will set up default components.
+    simulation = GeneticPopulation(
+        population=population)
     print(population.shape)
-    print(algo.reproduce(population).shape)
+    print(simulation.run().shape)
