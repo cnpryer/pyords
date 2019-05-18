@@ -25,9 +25,9 @@ class SimpleCrossover(CrossoverBase):
             for child in range(0, 2):
                 # TODO: probably increasing genetic material
                 A = population[self.cross][second-1]
-                Ai = np.random.randint(0, A.size)
+                Ai = np.random.randint(0, A.shape[0])
                 B = population[self.cross][second]
-                Bi = np.random.randint(0, B.size)
+                Bi = np.random.randint(0, B.shape[0])
                 Ac = list(A[:Ai])
                 Bc = list(B[:Bi])
                 C = Ac + Bc
