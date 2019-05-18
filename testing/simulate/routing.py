@@ -1,4 +1,5 @@
-from fyords.simulate.routing import DedicatedFleetGA
+from fyords.simulate.evaluation import SimpleFitness
+from fyords.simulate.population import GeneticPopulation
 from fyords.cluster.greenfield import MeanShift
 from fyords.util.preprocess.routing import ( # example of specified package use
     haversine_distance_matrix,
@@ -64,11 +65,36 @@ if __name__ == '__main__':
         settings['population_size']
         )
 
-    model = DedicatedFleetGA(
-        distances=distances,
-        routes=routes,
-        windows=windows,
-        demands=demands,
-        vehicles=vehicles,
-        settings=settings
-    )
+    # TODO: build routes mapping using clustering
+    # for now initialize with rndom list of route sets
+    population = encode_random_dedicatedfleet_ga(
+        distances,
+        settings['population_size']
+        )
+
+    # Fitness should be relative to the problem to be
+    # solved.
+    def fitness(individual, constants):
+        # distance evaluation
+        def get_distance(x,y):
+            return constants['distances'][x][y]
+
+        distance_scores = []
+        for element in individual:
+            tmp = []
+            for i in range(len(element)-1):
+                x, y = element[i], element[i+1]
+                tmp.append(get_distance(x,y))
+            distance_scores.append(sum(tmp))
+        print(distance_scores)
+
+    # Initializing the GeneticPopulation without passing
+    # any configuration will set up default components.
+    simulation = GeneticPopulation(
+        population=population)
+    print(population.shape)
+    print(simulation.run().shape)
+
+    constants = {
+        'distances': distances}
+    fitness(population[0], constants)
