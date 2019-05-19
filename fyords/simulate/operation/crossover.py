@@ -16,7 +16,6 @@ class SimpleCrossover(CrossoverBase):
         n = len(population)
         self.set_cross(n)
         new = list(population[np.invert(self.cross)].copy())
-        #print(len(population[cross]))
         n = population[self.cross].shape[0] # n pairs
         # TODO: might want to retain ordering by fitness evaluation
         # this would leave the remainder (not crossed pairwise) as the least

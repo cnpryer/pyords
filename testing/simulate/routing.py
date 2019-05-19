@@ -22,7 +22,7 @@ if __name__ == '__main__':
     }
 
     # generate testing lat and lon data
-    n = 10
+    n = 100
     data = pd.DataFrame({
         'origin_lat': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
         'origin_lon': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
@@ -75,6 +75,7 @@ if __name__ == '__main__':
     # Fitness should be relative to the problem to be
     # solved.
     def fitness(individual, constants):
+
         # distance evaluation
         def get_distance(x,y):
             return constants['distances'][x][y]
@@ -86,9 +87,9 @@ if __name__ == '__main__':
                 x, y = element[i], element[i+1]
                 tmp.append(get_distance(x,y))
             distance_scores.append(sum(tmp))
-        print(distance_scores)
+        return distance_scores
 
-    # Initializing the GeneticPopulation without passing
+    # Initializing the GeneticP opulation without passing
     # any configuration will set up default components.
     simulation = GeneticPopulation(
         population=population)
@@ -97,4 +98,7 @@ if __name__ == '__main__':
 
     constants = {
         'distances': distances}
-    fitness(population[0], constants)
+
+
+    s = pd.Series(population).apply(lambda x: fitness(x, constants))
+    print(s.shape)
