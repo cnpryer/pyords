@@ -82,14 +82,14 @@ if __name__ == '__main__':
 
         distance_scores = []
         if individual is None:
-            return None
+            return np.inf
         for element in individual:
             tmp = []
             for i in range(len(element)-1):
                 x, y = element[i], element[i+1]
                 tmp.append(get_distance(x,y))
-            distance_scores.append(sum(np.array(tmp)))
-        return np.array(distance_scores)
+            distance_scores.append(sum(tmp))
+        return sum(distance_scores)
 
     # Initializing the GeneticP opulation without passing
     # any configuration will set up default components.

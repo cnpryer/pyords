@@ -58,4 +58,6 @@ class GeneticPopulation(PopulationBase):
         self.population = self.mutation.run(self.population)
         scores = \
             [self.fitness.run(individual) for individual in self.population]
-        return np.array(scores)
+        order = np.argsort(scores)
+        self.population = self.population[order]
+        return self.population
