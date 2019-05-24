@@ -81,24 +81,24 @@ if __name__ == '__main__':
             return constants['distances'][x][y]
 
         distance_scores = []
+        if individual is None:
+            return None
         for element in individual:
             tmp = []
             for i in range(len(element)-1):
                 x, y = element[i], element[i+1]
                 tmp.append(get_distance(x,y))
-            distance_scores.append(sum(tmp))
-        return distance_scores
+            distance_scores.append(sum(np.array(tmp)))
+        return np.array(distance_scores)
 
     # Initializing the GeneticP opulation without passing
     # any configuration will set up default components.
-    simulation = GeneticPopulation(
-        population=population)
-    print(population.shape)
-    print(simulation.run().shape)
-
     constants = {
         'distances': distances}
+    fitness_assessment = SimpleFitness(function=fitness, constants=constants)
+    simulation = GeneticPopulation(
+        population=population,
+        fitness=fitness_assessment)
 
-
-    s = pd.Series(population).apply(lambda x: fitness(x, constants))
-    print(s.shape)
+    print(population.shape)
+    print(simulation.run().shape)

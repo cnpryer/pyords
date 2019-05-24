@@ -3,5 +3,10 @@ class FitnessBase:
         pass
 
 class SimpleFitness(FitnessBase):
-    def __init__(self):
+    def __init__(self, function, constants):
         FitnessBase.__init__(self)
+        self.function = function
+        self.constants = constants
+
+    def run(self, individual):
+        return self.function(individual, self.constants)

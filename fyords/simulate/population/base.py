@@ -8,6 +8,8 @@ from . import (
     SimpleIndividual,
     VariedSizeIndividual,
     SimpleInitialization)
+import numpy as np
+import pandas as pd
 
 class PopulationBase:
     def __init__(self):
@@ -39,7 +41,8 @@ class GeneticPopulation(PopulationBase):
             generations: number of generations of population simulation.
         '''
         PopulationBase.__init__(self)
-        self.fitness = fitness
+        self.fitness = \
+            SimpleFitness() if fitness is None else fitness
         self.population = [] if population is None else population
         # TODO: SimpleInitialization().run() if population is None else population
         self.selection = \
@@ -53,4 +56,6 @@ class GeneticPopulation(PopulationBase):
         self.population = self.selection.run(self.population)
         self.population = self.crossover.run(self.population)
         self.population = self.mutation.run(self.population)
-        return self.population
+        scores = \
+            [self.fitness.run(individual) for individual in self.population]
+        return np.array(scores)
