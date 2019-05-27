@@ -53,11 +53,11 @@ class GeneticPopulation(PopulationBase):
             SimpleMutation() if mutation is None else mutation
 
     def run(self):
-        self.population = self.selection.run(self.population)
-        self.population = self.crossover.run(self.population)
-        self.population = self.mutation.run(self.population)
         scores = \
             [self.fitness.run(individual) for individual in self.population]
         order = np.argsort(scores)
         self.population = self.population[order]
+        self.population = self.selection.run(self.population)
+        self.population = self.crossover.run(self.population)
+        self.population = self.mutation.run(self.population)
         return self.population

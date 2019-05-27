@@ -57,7 +57,7 @@ deliveries, penalties and dropping demand, ambiguous origins and destinations,
 and more. More detail coming soon.
 2. [Employee Scheduling](https://developers.google.com/optimization/scheduling/employee_scheduling).
 
-### util/Describe (helper)
+### helpers/Describe (helper)
 Grouped modules for descriptive statistics and general analysis of data.
 
 **Current Scope:**
@@ -89,7 +89,7 @@ forecasting.
 The *linear_solver* employs solutions to [linear programming](https://en.wikipedia.org/wiki/Linear_programming)
 problems.
 
-### util/Preprocess (helper)
+### helpers/Preprocess (helper)
 Name-space for preprocessing data.
 
 ### Quant (TBD)
@@ -114,7 +114,7 @@ classifications of simulation.
 1. [Genetic Algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm).
 2. [Stochastic Simulation](https://en.wikipedia.org/wiki/Stochastic_simulation).
 
-### Util (helper)
+### helpers
 Name-space for organized modules containing generally useful functions and
 objects.
 
@@ -123,11 +123,11 @@ objects.
 1. Pandas-dataframe-based wrangling
 
 
-### util/Visualize (TBD)
+### helpers/Visualize (TBD)
 *visualize* is aimed at providing helpful [data visualization](https://en.wikipedia.org/wiki/Data_visualization)
 suites.
 
-### util/Wrangle
+### helpers/Wrangle
 Name-space for data wrangling wrappers and helpers.
 
 ## Collaborating

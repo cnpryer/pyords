@@ -1,8 +1,3 @@
-'''
-TODO:
-    -For comprehensive libraries such as this one, do I import each name-space
-    here or would that not be efficient?
-'''
 from . import cluster
 from . import base
 from . import constraint_solver
