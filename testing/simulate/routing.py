@@ -1,7 +1,7 @@
 from fyords.simulate.evaluation import SimpleFitness
 from fyords.simulate.population import GeneticPopulation
 from fyords.cluster.greenfield import MeanShift
-from fyords.util.preprocess.routing import ( # example of specified package use
+from fyords.helpers.preprocess.routing import ( # example of specified package use
     haversine_distance_matrix,
     encode_random_dedicatedfleet_ga
 )

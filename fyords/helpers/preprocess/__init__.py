@@ -4,7 +4,3 @@ from .routing import (
     encode_random_dedicatedfleet_ga,
     encode_clustered_dedicatedfleet_ga)
 from .scgx import LlamaLoader, LlamaStage
-
-__docs__ = ''
-with open('./README.md') as f:
-    __docs__ = f.read()

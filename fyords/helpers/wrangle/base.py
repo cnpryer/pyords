@@ -1,4 +1,4 @@
-'''TODO: make this a pandas extension'''
+"""TODO: make this a pandas extension"""
 from . import SimpleCompostitionChecks, Fills, Drops
 import numpy as np
 import pandas as pd
