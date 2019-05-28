@@ -2,7 +2,7 @@ from math import radians, cos, sin, asin, sqrt
 import numpy as np
 
 def haversine(lat1:float, lat2:float, lon1:float, lon2:float, unit:str='mi'):
-    '''
+    """
     Purpose:
         Calculate the great circle distance between two points
         on the earth.
@@ -10,7 +10,7 @@ def haversine(lat1:float, lat2:float, lon1:float, lon2:float, unit:str='mi'):
     Args:
         ...
         unit: options are 'mi', 'km'
-    '''
+    """
     # convert decimal degrees to radians
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
 
@@ -29,7 +29,7 @@ def haversine(lat1:float, lat2:float, lon1:float, lon2:float, unit:str='mi'):
 
 def haversine_vectorized(lat1:np.array, lat2:np.array, lon1:np.array,
 lon2:np.array, unit:str='mi'):
-    '''
+    """
     Purpose:
         Calculate the great circle distance between coordinates of two vectors
         on the earth; order of origin->destination.
@@ -37,7 +37,7 @@ lon2:np.array, unit:str='mi'):
     Args:
         c1, c2: [lat:float, lon:float]
         unit: options are 'mi', 'km'
-    '''
+    """
     # TODO: degrees?
     lat1 = np.radians(lat1)
     lon1 = np.radians(lon1)

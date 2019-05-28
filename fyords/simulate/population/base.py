@@ -24,7 +24,7 @@ class GeneticPopulation(PopulationBase):
                 crossover=None,
                 mutation=None,
                 generations=100):
-        '''
+        """
         Population class for Genetic Algorithm.
         Args:
             initialization: fyords.initialization object to define
@@ -39,7 +39,7 @@ class GeneticPopulation(PopulationBase):
             mutation: fyords.operation.mutation to use for mutating elements of
             individuals.
             generations: number of generations of population simulation.
-        '''
+        """
         PopulationBase.__init__(self)
         self.fitness = \
             SimpleFitness() if fitness is None else fitness

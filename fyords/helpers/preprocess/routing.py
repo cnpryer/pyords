@@ -4,7 +4,7 @@ import pandas as pd
 import random
 
 def haversine_distance_matrix(lats:list, lons:list, unit:str='mi'):
-    '''
+    """
     Purpose:
         Generate a matrix of all-to-all disances using a vectorized haversine
         calculation.
@@ -12,7 +12,7 @@ def haversine_distance_matrix(lats:list, lons:list, unit:str='mi'):
     Args:
         lats, lons: lists of location latitudes. Order is preserved.
         unit: options are 'mi', 'km'
-    '''
+    """
     locations = list(zip(lats, lons))
     n = len(locations)
     distance_matrix = []
@@ -31,7 +31,7 @@ def haversine_distance_matrix(lats:list, lons:list, unit:str='mi'):
     return distance_matrix
 
 def encode_random_dedicatedfleet_ga(distances:np.array, size:int):
-    '''
+    """
     Purpose:
         Return randomized encoded population of route sets (individuals) to
         optimize using a genetic algorithm.
@@ -43,7 +43,7 @@ def encode_random_dedicatedfleet_ga(distances:np.array, size:int):
 
     TODO:
         Abstract to encoding.py?
-    '''
+    """
     population = []
     N = len(distances)-1
     for i in range(0, size): # per individual
@@ -56,7 +56,7 @@ def encode_random_dedicatedfleet_ga(distances:np.array, size:int):
     return np.array(population)
 
 def encode_clustered_dedicatedfleet_ga(data:pd.DataFrame):
-    '''
+    """
     Purpose:
         Return an encoded, clustered population to optimize using a genetic
         algorithm
@@ -66,5 +66,5 @@ def encode_clustered_dedicatedfleet_ga(data:pd.DataFrame):
 
     TODO:
         Abstract to encoding.py?
-    '''
+    """
     pass

@@ -2,7 +2,7 @@ import numpy as np
 from .base import GeneticAlgorithm
 
 class DedicatedFleetGA(GeneticAlgorithm):
-    '''
+    """
     Purpose:
         Provide a genetic algorithm for routing a dedicated fleet to a set
         of nodes with demand. This algorithm takes into account several
@@ -25,10 +25,10 @@ class DedicatedFleetGA(GeneticAlgorithm):
         that have values used to map back to the data to optimize or simulate.
         Beyond the initial design the goal is to abstract objects such as
         individual, population, etc.
-    '''
+    """
     def __init__(self, distances:np.array, routes:np.array, windows:np.array,
     demands:np.array, vehicles:np.array, settings:dict):
-        '''
+        """
         Args:
             distances: matrix of all-to-all distances (defines order).
             routes: encoded population containing sets of routes that
@@ -37,7 +37,7 @@ class DedicatedFleetGA(GeneticAlgorithm):
             times: array of time windows for each location (follows order).
             demands: array of demands for each location.
             vehicles: array of capacities representing a vehicle.
-        '''
+        """
         GeneticAlgorithm.__init__(self, settings)
         self.distances = distances
         self.routes = routes
@@ -47,7 +47,7 @@ class DedicatedFleetGA(GeneticAlgorithm):
         self.penalties = settings['penalties']
 
     def fitness(self, population:np.array):
-        '''
+        """
         Purpose:
             Assess the fitness of each individual in a population and return
             sorted best to worst.
@@ -55,11 +55,11 @@ class DedicatedFleetGA(GeneticAlgorithm):
         Args:
             population: array of individuals to assess. Typically a full
             population is passed, but a single individual can be passed as well.
-        '''
+        """
         pass
 
     def run(self):
-        '''manages algorithm'''
+        """manages algorithm"""
         # TODO: return sorted, fitness assessed population
         # currently fleshing out the Genetic Algorithm functions first. Then
         # the model-specific class will be completed.

@@ -3,11 +3,11 @@ import pandas as pd
 import logging
 
 class LlamaStage:
-    '''
+    """
     Purpose:
         Parent class to LlamaLoader. Abstracts the backend vs frontend
         staging differences.
-    '''
+    """
     def __init__(self, config:str='frontend'):
         self.configuration = config
         self.sheets = {
@@ -29,7 +29,7 @@ class LlamaStage:
         }[config]
 
 class LlamaLoader:
-    '''
+    """
     Purpose:
         Provide assistance to premodeling aligned with an SCGX environment.
         The stage for the data in SCGX can be of two config types. These
@@ -42,7 +42,7 @@ class LlamaLoader:
     Integrations:
         -SCGX
         -Pandas
-    '''
+    """
     defaultpath = ('C:/Users/{}/Documents/LLamasoft/Supply Chain Guru'
                 ).format(getlogin())
     def __init__(self, stage:LlamaStage, model:str='',
@@ -52,7 +52,7 @@ class LlamaLoader:
         self.configure_scg(model, scgpath, modelpath)
 
     def configure_scg(self, model:str, scgpath:str, modelpath:str):
-        '''
+        """
         Purpose:
             Configure LlamaLoader to point to an SCGX model stage (dir). Models
             must be found in the self.modelpath which is set here. This is
@@ -70,7 +70,7 @@ class LlamaLoader:
             project file (.scgp), model file (.scgm), etc. here. With this
             method you could pass the string created from
             self.scgpath+'/ProjectName'.
-        '''
+        """
         print('\nInitiating with paths:\n{}\n{}\n{}'.format(
             scgpath, modelpath, ospath.join(modelpath, model+'.scgm')))
         if ospath.isdir(scgpath) and ospath.isdir(modelpath) \
@@ -82,7 +82,7 @@ class LlamaLoader:
             print('Could not find scgpath, modelpath, and model.')
 
     def stage(self, df:pd.DataFrame, tablename:str):
-        '''
+        """
         Purpose:
             Stage dataframe to location for SCGX modeling. Templates must be
             saved to self.scgpath/import-templates/ and filenames should be
@@ -93,7 +93,7 @@ class LlamaLoader:
         Args:
             data: prepared dataframe (columns are aligned)
             tablename: SCGX Tablename (current scope: frontend)
-        '''
+        """
         # load scgx stage template
         print('\nLoading template.')
         template = pd.read_excel('{}/import-templates/{}.xlsx'.format(

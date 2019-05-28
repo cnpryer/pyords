@@ -14,7 +14,7 @@ class SimpleSelection(SelectionBase):
             np.power(np.arange(population_size, 0, -1), self.depreciation)
 
     def set_probabilities(self, weights):
-        '''assumes highest to lowest index ordering of population'''
+        """assumes highest to lowest index ordering of population"""
         self.probabilities = weights / weights.sum()
 
     def run(self, population):
