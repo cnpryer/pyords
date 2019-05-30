@@ -98,4 +98,5 @@ def test_basic_usage():
         population=population,
         fitness=fitness_assessment)
 
-    assert simulation.run()
+    simulation.run()
+    assert simulation.population.shape == population.shape
