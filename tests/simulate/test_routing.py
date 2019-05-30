@@ -3,14 +3,12 @@ from fyords.simulate.population import GeneticPopulation
 from fyords.cluster.greenfield import MeanShift
 from fyords.helpers.preprocess.routing import ( # example of specified package use
     haversine_distance_matrix,
-    encode_random_dedicatedfleet_ga
-)
+    encode_random_dedicatedfleet_ga)
 import pandas as pd
 import numpy as np
 
 
-if __name__ == '__main__':
-
+def test_basic_usage():
     # build GA settings
     settings = {
         'generations': 20,
@@ -100,5 +98,4 @@ if __name__ == '__main__':
         population=population,
         fitness=fitness_assessment)
 
-    print(population.shape)
-    print(simulation.run().shape)
+    assert simulation.run()
