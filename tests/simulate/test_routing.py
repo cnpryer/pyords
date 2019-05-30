@@ -9,29 +9,30 @@ import numpy as np
 
 
 def test_basic_usage():
-    # build GA settings
+
+    # TODO: build GA settings
+    # -determine appropriate number of individuals for base case
+    # -define 'penalties
     settings = {
         'generations': 20,
         'population_size': 100,
         'crossover_rate': 0.7,
         'mutation_rate': 0.2,
-        'individual_size': 10, # TODO: determine appropriate number for base case
-        'penalties': {} # TODO: define
-    }
+        'individual_size': 10,
+        'penalties': {}}
 
-    # generate testing lat and lon data
+    # TODO: generate testing lat and lon data
+    # -windows and other constraints
     n = 100
     data = pd.DataFrame({
         'origin_lat': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
         'origin_lon': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
         'dest_lat': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
         'dest_lon': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
-        'demand': np.random.randint(low=1, high=10, size=(n,))
-        # TODO: windows and other constraints
-    })
+        'demand': np.random.randint(low=1, high=10, size=(n,))})
 
-    # build locations list starting with origin (TODO: preprocessing multi-
-    # origin routing models)
+    # TODO: build locations list starting with origin
+    # -improve
     locations = list([data[['origin_lat', 'origin_lon']].iloc[0].tolist()])
 
     # aggregate demand
@@ -60,15 +61,13 @@ def test_basic_usage():
     # for now initialize with rndom list of route sets
     routes = encode_random_dedicatedfleet_ga(
         distances,
-        settings['population_size']
-        )
+        settings['population_size'])
 
-    # TODO: build routes mapping using clustering
-    # for now initialize with rndom list of route sets
+    # TODO:
+    # build routes mapping using clustering for now initialize with random list of route sets
     population = encode_random_dedicatedfleet_ga(
         distances,
-        settings['population_size']
-        )
+        settings['population_size'])
 
     # Fitness should be relative to the problem to be
     # solved.
@@ -89,7 +88,7 @@ def test_basic_usage():
             distance_scores.append(sum(tmp))
         return sum(distance_scores)
 
-    # Initializing the GeneticP opulation without passing
+    # Initializing the GeneticP population without passing
     # any configuration will set up default components.
     constants = {
         'distances': distances}

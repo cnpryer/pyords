@@ -1,11 +1,11 @@
 from fyords.constraint_solver.routing import DedicatedFleet
-from fyords.util.preprocess.routing import haversine_distance_matrix
+from fyords.helpers.preprocess.routing import haversine_distance_matrix
 import pandas as pd
 import numpy as np
 
 
-if __name__ == '__main__':
-
+def test_basic_usage():
+    # TODO: windows and other constraints
     # generate testing lat and lon data
     n = 10
     data = pd.DataFrame({
@@ -13,9 +13,7 @@ if __name__ == '__main__':
         'origin_lon': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
         'dest_lat': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
         'dest_lon': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
-        'demand': np.random.randint(low=1, high=10, size=(n,))
-        # TODO: windows and other constraints
-    })
+        'demand': np.random.randint(low=1, high=10, size=(n,))})
 
     # build locations list starting with origin (TODO: preprocessing multi-
     # origin routing models)
@@ -47,8 +45,6 @@ if __name__ == '__main__':
         distances=distances,
         windows=windows,
         demands=demands,
-        vehicles=vehicles
-    )
+        vehicles=vehicles)
 
-    print('TESTING')
-    print(', '.join("%s: %s" % item for item in vars(routes).items()))
+    assert routes is not None

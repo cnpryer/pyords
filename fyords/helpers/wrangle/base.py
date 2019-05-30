@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 class PandasWrangler:
-    def __init__(self, df:pd.DataFrame):
+    def __init__(self, df: object) -> object:
         self.set_df(df)
 
     def set_df(self, df:pd.DataFrame):
