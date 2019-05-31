@@ -51,6 +51,7 @@ class GeneticPopulation(PopulationBase):
             SimpleCrossover() if crossover is None else crossover
         self.mutation = \
             SimpleMutation() if mutation is None else mutation
+        self.generations = generations
 
     def run(self):
         scores = \

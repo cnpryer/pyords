@@ -8,4 +8,5 @@
 
 # development environments
 venv/
-.idea
+.idea/
+.pytest_cache/

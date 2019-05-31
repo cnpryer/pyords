@@ -14,7 +14,6 @@ def get_basic_routing_data():
 def test_data_initialization():
     assert isinstance(get_basic_routing_data(), (pd.DataFrame,))
 
-
 def test_haversine():
     data = get_basic_routing_data()
     lat1 = data.origin_lat.values[0]
