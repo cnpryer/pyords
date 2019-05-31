@@ -14,7 +14,7 @@ def test_basic_usage():
     # -determine appropriate number of individuals for base case
     # -define 'penalties
     settings = {
-        'generations': 20,
+        'generations': 1000,
         'population_size': 100,
         'crossover_rate': 0.7,
         'mutation_rate': 0.2,
@@ -23,7 +23,7 @@ def test_basic_usage():
 
     # TODO: generate testing lat and lon data
     # -windows and other constraints
-    n = 100
+    n = 100000
     data = pd.DataFrame({
         'origin_lat': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
         'origin_lon': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
@@ -88,7 +88,7 @@ def test_basic_usage():
             distance_scores.append(sum(tmp))
         return sum(distance_scores)
 
-    # Initializing the GeneticP population without passing
+    # Initializing the GeneticPopulation without passing
     # any configuration will set up default components.
     constants = {
         'distances': distances}
@@ -98,4 +98,4 @@ def test_basic_usage():
         fitness=fitness_assessment)
 
     simulation.run()
-    assert simulation.population.shape == population.shape
+    assert np.array(simulation.population).shape == np.array(population).shape

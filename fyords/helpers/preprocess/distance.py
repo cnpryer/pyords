@@ -1,15 +1,21 @@
 from math import radians, cos, sin, asin, sqrt
 import numpy as np
 
-def haversine(lat1:float, lat2:float, lon1:float, lon2:float, unit:str='mi'):
-    """
-    Purpose:
-        Calculate the great circle distance between two points
-        on the earth.
+def haversine(lat1: float, lon1: float, lat2: float, lon2: float,
+              unit: str='mi'):
+    """Calculate the great circle distance between two points on the earth.
 
-    Args:
-        ...
-        unit: options are 'mi', 'km'
+    Parameters
+    ----------
+    lat1: float of origin latitude.
+    lon1: float of origin longitude.
+    lat2: float of destination latitude.
+    lon2: float of destination longitude.
+    unit: string of distance unit of measure ('mi', 'km').
+
+    Returns
+    -------
+    distance: float
     """
     # convert decimal degrees to radians
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
@@ -27,16 +33,23 @@ def haversine(lat1:float, lat2:float, lon1:float, lon2:float, unit:str='mi'):
 
     return c * r
 
-def haversine_vectorized(lat1:np.array, lat2:np.array, lon1:np.array,
-lon2:np.array, unit:str='mi'):
-    """
-    Purpose:
-        Calculate the great circle distance between coordinates of two vectors
-        on the earth; order of origin->destination.
+def haversine_vectorized(lat1: list, lat2: list, lon1: list, lon2: list,
+                         unit: str='mi'):
+    """Calculate the great circle distance between coordinates of two vectors
+    on the earth; order of origin->destination. This function expects
+    np.ndarrays instead of python lists. TODO: need to refactor for this.
 
-    Args:
-        c1, c2: [lat:float, lon:float]
-        unit: options are 'mi', 'km'
+    Parameters
+    ----------
+    lat1: list-like of origin latitude.
+    lon1: list-like of origin longitude.
+    lat2: list-like of destination latitude.
+    lon2: list-like of destination longitude.
+    unit: string of distance unit of measure ('mi', 'km').
+
+    Returns
+    -------
+    distances: np.ndarray
     """
     # TODO: degrees?
     lat1 = np.radians(lat1)

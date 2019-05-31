@@ -5,7 +5,7 @@ class CompositionBase:
     def __init__(self):
         pass
 
-    def describe(self, conditions:tuple, df:pd.DataFrame, label:str='Info'):
+    def describe(self, conditions: tuple, df: pd.DataFrame, label: str='Info'):
         index = df.loc[conditions].index.tolist()
         x = len(df)
         y = len(index)
@@ -21,14 +21,14 @@ class SimpleCompostitionChecks(CompositionBase):
     def __init__(self):
         CompositionBase.__init__(self)
 
-    def check_zeros(self, df:pd.DataFrame, columns:list):
+    def check_zeros(self, df: pd.DataFrame, columns: list):
         conditions = (df[columns].astype('float') == 0).any(axis=1)
         self.describe(conditions, df, label='Zeros')
 
-    def check_nulls(self, df:pd.DataFrame, columns:list):
+    def check_nulls(self, df: pd.DataFrame, columns: list):
         conditions = (df[columns].isna()).any(axis=1)
         self.describe(conditions, df, label='Nulls')
 
-    def check_negatives(self, df:pd.DataFrame, columns:list):
+    def check_negatives(self, df: pd.DataFrame, columns: list):
         conditions = (df[columns].astype('float') < 0).any(axis=1)
         self.describe(conditions, df, label='Negatives')

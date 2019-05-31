@@ -15,7 +15,8 @@ def get_basic_routing_data():
 
 def test_encode_random_dedicatedfleet_ga():
     data = get_basic_routing_data()
-    assert isinstance(encode_random_dedicatedfleet_ga(data, 100), (np.ndarray,))
+    encoded = encode_random_dedicatedfleet_ga(data, 100)
+    assert isinstance(encoded, (list,))
 
 def test_haversine_distance_matrix():
     data = get_basic_routing_data()

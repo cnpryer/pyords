@@ -1,1 +1,1 @@
-from .plotly import PlotlyWrapper
+from .base import PlotlyWrapper
