@@ -1,11 +1,12 @@
 from fyords.helpers.preprocess.scgx import LlamaLoader, LlamaStage
+import pytest
 import pandas as pd
 import os
 import logging
 
 
 
-
+@pytest.mark.skip(reason='no way of currently testing this')
 def test_basic_usage():
 
     # correct test
