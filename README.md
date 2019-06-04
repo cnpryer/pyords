@@ -1,4 +1,6 @@
+[![CircleCI](https://circleci.com/gh/christopherpryer/fyords/tree/master.svg?style=svg)](https://circleci.com/gh/christopherpryer/fyords/tree/master)
 [![codebeat badge](https://codebeat.co/badges/f72db301-fd66-4c05-b1ca-9b8c8196f06e)](https://codebeat.co/projects/github-com-christopherpryer-fyords-master)
+
 # fyords
 A library for operations research, data science, and financial engineering.
 
