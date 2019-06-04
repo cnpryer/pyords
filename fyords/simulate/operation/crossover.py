@@ -13,12 +13,14 @@ class SimpleCrossover(CrossoverBase):
         n = len(population)
         self.cross_bools = np.random.random(n) < self.rate
         self.cross = [population[i] for i, y
-                      in enumerate(self.cross_bools) if y]
+                      in enumerate(self.cross_bools)
+                      if y and population[i] is not None]
 
     def run(self, population):
         self.set_cross(population)
         new = [population[i] for i, y
-               in enumerate(self.cross_bools) if not y]
+               in enumerate(self.cross_bools)
+               if not y or population[i] is None]
         n = len(self.cross)
         for second in range(1, n, 2):
             for child in range(0, 2):

@@ -15,16 +15,17 @@ class SimpleSelection(SelectionBase):
 
     def set_probabilities(self, weights):
         """Assumes highest to lowest index ordering of population"""
-        self.probabilities = weights / weights.sum()
+        self.probabilities = [weight/sum(weights) for weight in weights]
 
     def run(self, population):
         n = len(population)
         self.set_weights(n)
         self.set_probabilities(self.weights)
+        indices = np.arange(n)
         selected = np.random.choice(
-            population,
+            indices,
             size=n,
-            # TODO: determind diveristy
+            # TODO: determine diversity
             #replace=False,
             p=self.probabilities)
-        return list(selected)
+        return [population[i] for i in selected]
