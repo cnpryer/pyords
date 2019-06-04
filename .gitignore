@@ -10,3 +10,4 @@
 venv/
 .idea/
 .pytest_cache/
+.editorconfig
