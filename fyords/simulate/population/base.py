@@ -49,14 +49,16 @@ class GeneticPopulation(PopulationBase):
         self.mutation = \
             SimpleMutation() if mutation is None else mutation
         self.generations = generations
+        self.unique_individuals = len(np.unique(population))
 
     def run(self):
         for generation in range(0, self.generations):
-            scores = \
-                [self.fitness.run(individual) for individual in self.population]
+            scores = [-self.fitness.run(individual)
+                      for individual in self.population]
             order = list(np.argsort(scores))
             self.population = [self.population[i] for i in order]
             self.population = self.selection.run(self.population)
             self.population = self.crossover.run(self.population)
             self.population = self.mutation.run(self.population)
+            self.unique_individuals = len(np.unique(self.population))
         return self.population

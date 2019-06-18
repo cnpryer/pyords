@@ -9,12 +9,11 @@ import numpy as np
 
 
 def test_basic_usage():
-
     # TODO: build GA settings
     # -determine appropriate number of individuals for base case
     # -define 'penalties
     settings = {
-        'generations': 20,
+        'generations': 10,
         'population_size': 100,
         'crossover_rate': 0.7,
         'mutation_rate': 0.2,
@@ -25,11 +24,11 @@ def test_basic_usage():
     # -windows and other constraints
     n = 100
     data = pd.DataFrame({
-        'origin_lat': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
-        'origin_lon': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
-        'dest_lat': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
-        'dest_lon': np.random.uniform(low=-100.0, high=100.0, size=(n,)),
-        'demand': np.random.randint(low=1, high=10, size=(n,))})
+        'origin_lat': np.array([40.5 for i in range(n)]),
+        'origin_lon': np.array([-77.5 for i in range(n)]),
+        'dest_lat': np.random.uniform(low=40.0, high=41.0, size=(n,)),
+        'dest_lon': np.random.uniform(low=-78.0, high=-77.0, size=(n,)),
+        'demand': np.random.randint(low=1, high=100, size=(n,))})
 
     # TODO: build locations list starting with origin
     # -improve
@@ -44,7 +43,7 @@ def test_basic_usage():
     locations = np.array([np.array(loc) for loc in locations]) # convert tuples
 
     # build demands
-    demands = np.array([0] + data.demand.tolist())
+    demand = np.array([0] + data.demand.tolist())
 
     # build distance matrix
     lats = np.array([loc[0] for loc in locations])
@@ -56,12 +55,6 @@ def test_basic_usage():
 
     # build vehicles
     vehicles = np.array([45 for i in range(0, 2)])
-
-    # TODO: build routes mapping using clustering
-    # for now initialize with rndom list of route sets
-    routes = encode_random_dedicatedfleet_ga(
-        distances,
-        settings['population_size'])
 
     # TODO:
     # build routes mapping using clustering for now initialize with random list of route sets
@@ -77,21 +70,33 @@ def test_basic_usage():
         def get_distance(x,y):
             return constants['distances'][x][y]
 
-        distance_scores = []
+        # demand evaluation
+        def get_demand(x):
+            return constants['demand'][x]
+
+        distance_total = 0
+        demand_total = 0
         if individual is None:
             return np.inf
         for element in individual:
-            tmp = []
+            distance = 0
+            demand = 0
             for i in range(len(element)-1):
                 x, y = element[i], element[i+1]
-                tmp.append(get_distance(x,y))
-            distance_scores.append(sum(tmp))
-        return sum(distance_scores)
+                distance += get_distance(x,y)
+                demand += get_demand(x)
+            distance += get_distance(element[-1], 0)
+            demand += get_demand(element[-1])
+            distance_total += distance
+            demand_total += demand
+        score = (-distance_total) + demand_total
+        return score
 
     # Initializing the GeneticPopulation without passing
     # any configuration will set up default components.
     constants = {
-        'distances': distances}
+        'distances': distances,
+        'demand': demand}
     fitness_assessment = SimpleFitness(function=fitness, constants=constants)
     simulation = GeneticPopulation(
         population=population,

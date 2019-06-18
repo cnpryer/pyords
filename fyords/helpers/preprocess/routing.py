@@ -55,7 +55,8 @@ def encode_random_dedicatedfleet_ga(distances: list, size: int):
     for i in range(0, size): # per individual
         individual = []
         for j in range(0, random.randint(1, N)): # random len of individual
-            routes = np.random.randint(low=1, high=N, size=(random.randint(1, N),))
+            routes = \
+                np.random.randint(low=1, high=N, size=(random.randint(1, N),))
             individual.append(list(routes))
         population.append(individual)
     return population

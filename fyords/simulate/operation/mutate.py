@@ -5,7 +5,7 @@ class MutationBase:
         pass
 
 class SimpleMutation(MutationBase):
-    def __init__(self, rate=0.01):
+    def __init__(self, rate=0.05):
         MutationBase.__init__(self)
         self.rate = rate
 
@@ -20,5 +20,8 @@ class SimpleMutation(MutationBase):
         self.set_mutate(population)
         new = [population[i] for i, y in enumerate(self.mutate_bools)
                if not y or population[i] is None]
-        new += [np.random.shuffle(i) for i in self.mutate]
+        for individual in self.mutate:
+            for element in individual:
+                np.random.shuffle(np.array(element))
+        new += self.mutate
         return new
