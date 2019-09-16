@@ -110,8 +110,6 @@ algorithm = algs.BasicGeneticAlgorithm(
 def test_algorithm():
     result = algorithm.run()
     assert len(result) == len(demand_data)
-    demand_data['truck_id'] = result
-    demand_data.to_csv(path.join(instance_dir, 'result.csv'), index=False)
 
 if __name__ == '__main__':
     test_algorithm()
