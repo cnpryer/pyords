@@ -13,7 +13,7 @@ def test_basic_usage():
     # -determine appropriate number of individuals for base case
     # -define 'penalties
     settings = {
-        'generations': 10,
+        'generations': 50,
         'population_size': 100,
         'crossover_rate': 0.7,
         'mutation_rate': 0.2,
