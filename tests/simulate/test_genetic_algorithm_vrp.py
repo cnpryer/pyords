@@ -6,12 +6,13 @@ import numpy as np
 from os import path
 from haversine import haversine, Unit
 import random
+import logging
 
 root_dir = path.dirname(path.abspath(__name__))
 tests_dir = path.join(root_dir, 'tests')
 this_dir = path.join(tests_dir, 'simulate')
 
-n_generations = 10000
+n_generations = 10
 population_size = 10
 
 # each index position of the first individual maps to same position in
@@ -26,9 +27,12 @@ initial_route_ids = np.random.randint(0, n-1, n) # random first individual
 geo_lookup = demand_data[['zipcode', 'latitude', 'longitude']]\
     .drop_duplicates()
 geo_lookup['position'] = list(range(len(geo_lookup)))
+zip_lookup = geo_lookup.reset_index()[['zipcode', 'position']]
 
-cols = ['zipcode', 'position']
-environment_dict = {'zip_lookup': geo_lookup.reset_index()[cols]}
+# add distance_matrix-relative position to demand data zipcodes
+position_dict = dict(zip(geo_lookup.zipcode, geo_lookup.position))
+demand_data['zip_i'] = demand_data.zipcode.replace(position_dict)
+
 
 # create corresponding distance matrix
 distance_matrix = []
@@ -43,7 +47,7 @@ for i in indicies:
         dist = haversine((o_lat, o_lon), (d_lat, d_lon), Unit.MILES)
         tmp_dist_li.append(dist*1.17) # assumed circuity
     distance_matrix.append(tmp_dist_li)
-environment_dict['distance_matrix'] = distance_matrix
+environment_dict = {'distance_matrix': distance_matrix}
 
 def fitness_func(individual, environment):
     """Return a fitness score for an individual. Lower scores rank
@@ -71,23 +75,19 @@ def fitness_func(individual, environment):
         max_pallets - decoded.groupby('chromosomes')['pallets'].sum()
         ).abs().sum()
 
-    def get_distance(x):
-        if pd.isnull(x['zipcode']) or pd.isnull(x.prev_zip):
+    def get_distance(c1, c2, i1, i2):
+        if i1 < 0:
             return np.nan
-        if x.chromosomes != x.prev_chromosomes:
+        if c1 != c2:
             return np.nan
-        lookup = environment._dict['zip_lookup']
-        origin_condition = (lookup['zipcode'] == x.prev_zip)
-        origin_index = lookup.loc[origin_condition, 'position'].values[0]
-        dest_condition = (lookup['zipcode'] == x['zipcode'])
-        dest_index = lookup.loc[dest_condition, 'position'].values[0]
-        return environment._dict['distance_matrix'][origin_index][dest_index]
+        return environment._dict['distance_matrix'][int(i1)][int(i2)]
 
     def get_distance_penalty():
         decoded.sort_values(by='chromosomes', inplace=True)
-        decoded['prev_zip'] = decoded['zipcode'].shift()
+        decoded['prev_i'] = decoded.zip_i.shift().fillna(-1).astype(int)
         decoded['prev_chromosomes'] = decoded.chromosomes.shift()
-        decoded['distance'] = decoded.apply(get_distance, axis=1)
+        decoded['distance'] = decoded.apply(lambda x: get_distance(
+            x.prev_chromosomes, x.chromosomes, x.prev_i, x.zip_i), axis=1)
         return decoded.distance.sum()
 
     distance_penalty = get_distance_penalty()

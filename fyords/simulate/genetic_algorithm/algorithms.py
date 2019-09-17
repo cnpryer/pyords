@@ -1,7 +1,6 @@
 import logging
 import sys
 import numpy as np
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 class BasicGeneticAlgorithm:
     def __init__(self, first_individual, environment, fitness_func,
