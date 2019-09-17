@@ -1,4 +1,7 @@
+import logging
+import sys
 import numpy as np
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 class BasicGeneticAlgorithm:
     def __init__(self, first_individual, environment, fitness_func,
@@ -18,20 +21,31 @@ class BasicGeneticAlgorithm:
         self.crossover_percent = crossover_percent
         self.mutation_rate = mutation_rate
 
+    def to_dict(self):
+        return {
+            'first_individual_len': len(self.first_individual),
+            'n_generations': self.n_generations,
+            'population_size': self.population_size,
+            'selection_depreciation': self.selection_depreciation,
+            'crossover_rate': self.crossover_rate,
+            'crossover_percent': self.crossover_percent,
+            'mutation_rate': self.mutation_rate
+        }
+
     def initialize_population(self, first_individual, size):
         """Initializes a population from the set of chromosomes from the first
         individual"""
         pool = first_individual
         return np.random.choice(pool, (size, len(pool)))
 
-    def assess(self):
+    def evaluate(self):
         scores = [-self.fitness_func(individual, self.environment)
             for individual in self.population]
         ranking = np.argsort(scores)
         return [self.population[i] for i in ranking]
 
     def select(self):
-        new_population = self.assess()
+        new_population = self.evaluate()
         reverse = np.arange(self.population_size, 0, -1)
         weights = np.power(reverse, self.selection_depreciation)
         probabilities = [weight/sum(weights) for weight in weights]
@@ -65,8 +79,10 @@ class BasicGeneticAlgorithm:
         self.population[indicies] = np.random.randint(0, n, size=impact)
 
     def run(self):
+        logging.info('GA initiated with : %s' % self.to_dict())
         for i in range(self.n_generations):
+            logging.info('Running generation %s' % i)
             self.select()
             self.crossover()
             self.mutate()
-        return self.assess()[0]
+        return self.evaluate()[0]

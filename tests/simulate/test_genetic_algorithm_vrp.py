@@ -11,7 +11,7 @@ root_dir = path.dirname(path.abspath(__name__))
 tests_dir = path.join(root_dir, 'tests')
 this_dir = path.join(tests_dir, 'simulate')
 
-n_generations = 1
+n_generations = 10000
 population_size = 10
 
 # each index position of the first individual maps to same position in
@@ -45,7 +45,6 @@ for i in indicies:
     distance_matrix.append(tmp_dist_li)
 environment_dict['distance_matrix'] = distance_matrix
 
-
 def fitness_func(individual, environment):
     """Return a fitness score for an individual. Lower scores rank
     higher."""
@@ -61,7 +60,7 @@ def fitness_func(individual, environment):
     # evaluate routes' total weight, total pallets, and total distance.
     max_weight = 45000
     max_pallets = 25
-    max_distance = 50*2 # represent a total day of driving
+    max_distance = 50*2 # represent a total day of driving based off of 2 stops
 
     # tally penalties (dif from maxing out capacity + minimizing distance)
     weight_penalty = (
