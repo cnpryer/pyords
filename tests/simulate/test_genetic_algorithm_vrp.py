@@ -8,21 +8,17 @@ from haversine import haversine, Unit
 import random
 
 root_dir = path.dirname(path.abspath(__name__))
-instance_dir = path.join(root_dir, 'instance')
+tests_dir = path.join(root_dir, 'tests')
+this_dir = path.join(tests_dir, 'simulate')
 
 n_generations = 1
 population_size = 10
 
 # each index position of the first individual maps to same position in
 # its environment data (in this case demand_data).
-n = 100
+demand_data = pd.read_csv(path.join(this_dir, 'vrp_testing_data.csv'))
+n = len(demand_data)
 initial_route_ids = np.random.randint(0, n-1, n) # random first individual
-demand_data = pd.DataFrame({
-    'zipcode': np.random.randint(0, n, size=(n,)),
-    'latitude': np.random.uniform(low=40.0, high=41.0, size=(n,)),
-    'longitude': np.random.uniform(low=-78.0, high=-77.0, size=(n,)),
-    'weight': np.random.randint(low=5000, high=45000, size=(n,)),
-    'pallets': np.random.randint(low=1, high=20, size=(n,))})
 
 # set up individuals' environment with dataframe for the solve and
 # {'zip_lookup': df, 'distance_matrix': []} to use within fitness_func.
