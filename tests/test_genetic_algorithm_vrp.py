@@ -1,6 +1,6 @@
 """Use case for solving VRP using a genetic algorithm"""
-from fyords.optimize.genetic_algorithm import algorithms as algs
-from fyords.optimize.genetic_algorithm import environments as envs
+from fyords.genetic_algorithm import algorithms as algs
+from fyords.genetic_algorithm import environments as envs
 import pandas as pd
 import numpy as np
 from os import path
@@ -9,8 +9,7 @@ import random
 import logging
 
 root_dir = path.dirname(path.abspath(__name__))
-tests_dir = path.join(root_dir, 'tests')
-this_dir = path.join(tests_dir, 'optimize')
+this_dir = path.join(root_dir, 'tests')
 
 n_generations = 10
 population_size = 10

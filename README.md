@@ -35,7 +35,7 @@ or JavaScript.
 The code provides everything from low level optimization engines to higher level
 helper name-spaces.
 
-### Cluster
+### cluster
 *cluster* is aimed at identifying groups in data. See
 [clustering](https://en.wikipedia.org/wiki/Cluster_analysis).
 
@@ -45,7 +45,7 @@ helper name-spaces.
 a facility location and operation problem. *cluster* will provide a clustering
 algorithm for heuristic solutions.
 
-### Optimize
+### genetic_algorithm
 *optimize* is an engine composing of various optimization packages.
 
 **Current Scope:**
