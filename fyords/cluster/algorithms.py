@@ -63,3 +63,7 @@ class KMeans:
                 logging.error('failed to utilize k-centroids') # TODO: debug
                 break
             run += 1
+
+class DBSCAN:
+    def __init__(self):
+        pass

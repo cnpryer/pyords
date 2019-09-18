@@ -45,6 +45,8 @@ helper name-spaces.
 a facility location and operation problem. *cluster* will provide a clustering
 algorithm for heuristic solutions.
 
+2. Route heuristic for clustering final-destination demand nodes by proximity.
+
 ### genetic_algorithm
 *optimize* is an engine composing of various optimization packages.
 
