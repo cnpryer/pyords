@@ -9,9 +9,16 @@ this_dir = path.join(root_dir, 'tests')
 
 def test_knownk_kmeans():
     df = pd.read_csv(path.join(this_dir, 'greenfield_testing_data.csv'))
-    x = df.latitude.values
-    y = df.longitude.values
-    k = 3 # three dc solution
-    kmeans = KMeans(x, y, k)
+
+    # simplify euclidean distance calculation by projecting to positive vals
+    x = df.latitude.values + 90
+    y = df.longitude.values + 180
+
+    k = 2 # desired n locations solution
+    kmeans = KMeans(k)
     logging.info('kmeans configuration: %s' % kmeans.to_dict())
-    assert len(kmeans.centroids) > 0
+
+    kmeans.fit(x, y)
+    kmeans.predict()
+    logging.info('result: %s' % kmeans.centroids)
+    assert len(kmeans.centroids) == k
