@@ -35,110 +35,27 @@ or JavaScript.
 The code provides everything from low level optimization engines to higher level
 helper name-spaces.
 
-### Cluster (engine)
+### Cluster
 *cluster* is aimed at identifying groups in data. See
 [clustering](https://en.wikipedia.org/wiki/Cluster_analysis).
 
 **Current Scope:**
 
 1. [Greenfield Analysis](http://supplychaindetective.com/2017/08/12/network-strategy-part-1-greenfield-analysis/) -
-a facility location and operation problem.
+a facility location and operation problem. *cluster* will provide a clustering
+algorithm for heuristic solutions.
 
-### Base (TBD)
-Grouped modules for abstracted *fyords* functionality.
-
-### Constraint Solver (engine)
-*constraint_solver* is aimed at providing an optimization engine for
-[constraint programming](https://en.wikipedia.org/wiki/Constraint_programming).
-
-**Current Scope:**
-
-1. [Routing](https://en.wikipedia.org/wiki/Vehicle_routing_problem) with demand,
-capacity, time-windows, resource limitations and variety, pickups and
-deliveries, penalties and dropping demand, ambiguous origins and destinations,
-and more. More detail coming soon.
-2. [Employee Scheduling](https://developers.google.com/optimization/scheduling/employee_scheduling).
-
-### helpers/Describe (helper)
-Grouped modules for descriptive statistics and general analysis of data.
-
-**Current Scope:**
-
-1. Logistics-based opportunities
-
-### Graph Solver (engine)
-This solver is limited to solutions to
-[graph theory](https://en.wikipedia.org/wiki/Graph_theory) problems.
-
-**Current Scope:**
-
-1. [Network Flow](https://en.wikipedia.org/wiki/Flow_network) for supply chain
-design.
-
-### Learn (engine)
-*learn* is aimed at leveraging [predictive](https://en.wikipedia.org/wiki/Predictive_analytics)
-or [machine learning](https://en.wikipedia.org/wiki/Machine_learning)
-techniques.
-
-**Current Scope:**
-
-1. [Neural networks](https://en.wikipedia.org/wiki/Artificial_neural_network)
-for demand forecasting.
-2. [Regression](https://en.wikipedia.org/wiki/Regression_analysis) for demand
-forecasting.
-
-### Linear Solver (engine)
-The *linear_solver* employs solutions to [linear programming](https://en.wikipedia.org/wiki/Linear_programming)
-problems.
-
-### helpers/Preprocess (helper)
-Name-space for preprocessing data.
-
-### Quant (TBD)
-*quant* is aimed at providing [financial engineering](https://en.wikipedia.org/wiki/Financial_engineering)
-modules. *quant* is not limited to specifically [financial applications of
-mathematics](https://en.wikipedia.org/wiki/Mathematical_finance), but also
-involves subjects pertaining to the responsibilities of a [quantitative
-analyst](https://en.wikipedia.org/wiki/Quantitative_analyst). There is a lot of
-overlap between OR and quantitative finance. Risk management is a good example
-of this. Various modeling methodologies in quantitative finance share
-similarities with both operations research and data science. For this reason
-*quant* is integrated with this library.
-
-### Simulate (engine)
-*simulate* is an engine dedicated to various
-*[simulation](https://en.wikipedia.org/wiki/Simulation)* suites. The word
-*simulation* is used loosely here and does not limit the engine to literal
-classifications of simulation.
+### Optimize
+*optimize* is an engine composing of various optimization packages.
 
 **Current Scope:**
 
 1. [Genetic Algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm).
-2. [Stochastic Simulation](https://en.wikipedia.org/wiki/Stochastic_simulation).
 
-### helpers
-Name-space for organized modules containing generally useful functions and
-objects.
-
-**Current Scope:**
-
-1. Pandas-dataframe-based wrangling
-
-
-### helpers/Visualize (TBD)
-*visualize* is aimed at providing helpful [data visualization](https://en.wikipedia.org/wiki/Data_visualization)
-suites.
-
-### helpers/Wrangle
-Name-space for data wrangling wrappers and helpers.
 
 ## Collaborating
 Since this is a learning project, the code will be developed with the
 intention of solving a real-world problem pertaining to the developer. This
-will impact the evolution of this library's design. An example of this taylored
-design would be the module in the *constraint_solver* name-space. This
-name-space is intended to house a constraint programming engine with
-problem-agnostic design. Early on a *routing.py* module will house specified
-modeling such as *DedicatedFleet* and *AmbiguousFleet*. It is required for this
+will impact the evolution of this library's design. It is required for this
 evolution of design strategy to be followed if you would like to collaborate.
 Each problem-set must be developed in its own feature branch.
