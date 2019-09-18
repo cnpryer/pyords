@@ -1,5 +1,5 @@
 """Use case for solving VRP using a genetic algorithm"""
-from fyords.genetic_algorithm import algorithms as algs
+from fyords.genetic_algorithm import BasicGeneticAlgorithm
 from fyords.genetic_algorithm import environments as envs
 import pandas as pd
 import numpy as np
@@ -94,7 +94,7 @@ def fitness_func(individual, environment):
 
 # configure algorithm
 environment = envs.BasicEnvironment(df=demand_data, _dict=environment_dict)
-algorithm = algs.BasicGeneticAlgorithm(
+algorithm = BasicGeneticAlgorithm(
     first_individual=initial_route_ids,
     environment=environment,
     fitness_func=fitness_func,
