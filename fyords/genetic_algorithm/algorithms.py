@@ -5,7 +5,8 @@ import numpy as np
 class BasicGeneticAlgorithm:
     def __init__(self, first_individual, environment, fitness_func,
         population_size=10, n_generations=100, selection_depreciation=0.5,
-        crossover_rate=0.7, crossover_percent=0.5, mutation_rate=0.05):
+        crossover_rate=0.7, crossover_percent=0.5, mutation_rate=0.05,
+        viz=None):
         """Returns optimized solution based off initial individual and fitness
         function."""
         self.first_individual = first_individual
@@ -19,6 +20,7 @@ class BasicGeneticAlgorithm:
         self.crossover_rate = crossover_rate
         self.crossover_percent = crossover_percent
         self.mutation_rate = mutation_rate
+        self.viz = viz
 
     def to_dict(self):
         return {
@@ -40,6 +42,8 @@ class BasicGeneticAlgorithm:
     def evaluate(self):
         scores = [-self.fitness_func(individual, self.environment)
             for individual in self.population]
+        if self.viz:
+            self.viz.update(max(scores))
         ranking = np.argsort(scores)
         return [self.population[i] for i in ranking]
 

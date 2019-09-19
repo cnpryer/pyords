@@ -1,6 +1,7 @@
 """Use case for solving VRP using a genetic algorithm"""
 from fyords.genetic_algorithm import BasicGeneticAlgorithm
 from fyords.genetic_algorithm import environments as envs
+from fyords.genetic_algorithm.visualizations import BasicAlgoHelper
 import pandas as pd
 import numpy as np
 from os import path
@@ -11,7 +12,7 @@ import logging
 root_dir = path.dirname(path.abspath(__name__))
 this_dir = path.join(root_dir, 'tests')
 
-n_generations = 10
+n_generations = 1000
 population_size = 10
 
 # each index position of the first individual maps to same position in
@@ -31,7 +32,6 @@ zip_lookup = geo_lookup.reset_index()[['zipcode', 'position']]
 # add distance_matrix-relative position to demand data zipcodes
 position_dict = dict(zip(geo_lookup.zipcode, geo_lookup.position))
 demand_data['zip_i'] = demand_data.zipcode.replace(position_dict)
-
 
 # create corresponding distance matrix
 distance_matrix = []
@@ -90,7 +90,11 @@ def fitness_func(individual, environment):
         return decoded.distance.sum()
 
     distance_penalty = get_distance_penalty()
-    return weight_penalty + pallet_penalty + distance_penalty
+    total_penalty = weight_penalty + pallet_penalty + distance_penalty
+    return total_penalty
+
+# visualization for fitness algo performance
+viz = BasicAlgoHelper()
 
 # configure algorithm
 environment = envs.BasicEnvironment(df=demand_data, _dict=environment_dict)
@@ -99,7 +103,9 @@ algorithm = BasicGeneticAlgorithm(
     environment=environment,
     fitness_func=fitness_func,
     n_generations=n_generations,
-    population_size=population_size)
+    population_size=population_size,
+    mutation_rate=0.07,
+    viz=viz)
 
 def test_algorithm():
     result = algorithm.run()
