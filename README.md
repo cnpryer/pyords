@@ -50,6 +50,8 @@ algorithm for heuristic solutions.
 ### genetic_algorithm
 [Genetic Algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm).
 
+### solver
+1. [Route optimization](https://en.wikipedia.org/wiki/Vehicle_routing_problem)
 
 ## Collaborating
 Since this is a learning project, the code will be developed with the
