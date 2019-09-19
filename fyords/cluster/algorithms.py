@@ -65,5 +65,57 @@ class KMeans:
             run += 1
 
 class DBSCAN:
-    def __init__(self):
-        pass
+    def __init__(self, x, y, epsilon=0.5, minpts=2):
+        self.epsilon = epsilon
+        self.minpts = minpts
+
+    def to_dict(self):
+        _dict = {'epsilon': self.epsilon, 'minpts': self.minpts}
+        try:
+            _dict['n X'] = len(self.X)
+        except:
+            logging.warning('X has not been set.')
+        return _dict
+
+    def fit(self, x, y):
+        self.X = list(zip(x, y))
+        self.clusters = np.zeros(len(self.X))
+
+    @staticmethod
+    def get_neighbors(X, i, epsilon):
+        neighbors = []
+        for j in range(0, len(X)):
+            # TODO: tuple - tuple not accepted; understand
+            a = np.array(X[i])
+            b = np.array(X[j])
+            if np.linalg.norm(a-b) < epsilon:
+                neighbors.append(j)
+        return neighbors
+
+    def build_cluster(self, i, neighbors, cluster):
+        self.clusters[i] = cluster
+        for j in neighbors:
+            if self.clusters[j] == -1: # TODO: is this redundant (see below)
+                self.clusters[j] = cluster
+            elif self.clusters[j] == 0:
+                self.clusters[j] = cluster
+                points = self.get_neighbors(self.X, j, self.epsilon)
+
+                if len(points) >= self.minpts:
+                    neighbors += points
+
+    def predict(self, x=None, y=None):
+        if x is None or y is None:
+            X = self.X
+        else:
+            X = list(zip(x, y))
+
+        cluster = 0
+        for i in range(0, len(X)):
+            if not self.clusters[i] == 0:
+                continue
+            points = self.get_neighbors(X, i, self.epsilon)
+            if len(points) < self.minpts:
+                self.clusters[i] = -1 # noise
+            else:
+                cluster += 1
