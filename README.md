@@ -48,11 +48,7 @@ algorithm for heuristic solutions.
 2. Route heuristic for clustering final-destination demand nodes by proximity.
 
 ### genetic_algorithm
-*optimize* is an engine composing of various optimization packages.
-
-**Current Scope:**
-
-1. [Genetic Algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm).
+[Genetic Algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm).
 
 
 ## Collaborating
