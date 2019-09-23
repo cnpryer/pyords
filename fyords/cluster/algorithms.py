@@ -17,8 +17,10 @@ class KMeans:
         _dict = {'k': self.k}
         try:
             _dict['n X'] = len(self.X)
-            _dict['n centroids'] = len(x[~np.isnan(self.centroids)])
+            nonnull = ~np.isnan(self.centroids)
+            _dict['n centroids'] = len(self.centroids[nonnull.all(axis=1)])
         except:
+
             logging.warning('X has not been set.')
         return _dict
 
