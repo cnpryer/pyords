@@ -18,14 +18,16 @@ def test_basic_dbscan():
     x = df.latitude.values + 90
     y = df.longitude.values + 180
 
+    lab.close('all')
     viz = BasicDBSCANHelper()
 
     dbscan = DBSCAN(epsilon, minpts, viz=viz)
     dbscan.fit(x, y)
     dbscan.predict()
+    dbscan.viz.update(dbscan.clusters)
+    
     logging.info('dbscan configuration: %s' % dbscan.to_dict())
     logging.info('dbscan unique result: %s' % set(dbscan.clusters))
-    dbscan.viz.update(dbscan.clusters)
     assert len(dbscan.X) == len(dbscan.clusters)
 
 if __name__ == '__main__':

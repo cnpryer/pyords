@@ -2,6 +2,7 @@
 from fyords.genetic_algorithm import BasicGeneticAlgorithm
 from fyords.genetic_algorithm import environments as envs
 from fyords.genetic_algorithm.visualizations import BasicAlgoHelper
+import matplotlib.pylab as lab
 import pandas as pd
 import numpy as np
 from os import path
@@ -12,7 +13,7 @@ import logging
 root_dir = path.dirname(path.abspath(__name__))
 this_dir = path.join(root_dir, 'tests')
 
-n_generations = 100
+n_generations = 10
 population_size = 10
 
 # each index position of the first individual maps to same position in
@@ -93,21 +94,21 @@ def fitness_func(individual, environment):
     total_penalty = weight_penalty + pallet_penalty + distance_penalty
     return total_penalty
 
-# visualization for fitness algo performance
-viz = BasicAlgoHelper()
-
-# configure algorithm
-environment = envs.BasicEnvironment(df=demand_data, _dict=environment_dict)
-algorithm = BasicGeneticAlgorithm(
-    first_individual=initial_route_ids,
-    environment=environment,
-    fitness_func=fitness_func,
-    n_generations=n_generations,
-    population_size=population_size,
-    mutation_rate=0.07,
-    viz=viz)
-
 def test_algorithm():
+    # visualization for fitness algo performance
+    lab.close('all')
+    viz = BasicAlgoHelper()
+
+    # configure algorithm
+    environment = envs.BasicEnvironment(df=demand_data, _dict=environment_dict)
+    algorithm = BasicGeneticAlgorithm(
+        first_individual=initial_route_ids,
+        environment=environment,
+        fitness_func=fitness_func,
+        n_generations=n_generations,
+        population_size=population_size,
+        mutation_rate=0.07,
+        viz=viz)
     result = algorithm.run()
     assert len(result) == len(demand_data)
 
