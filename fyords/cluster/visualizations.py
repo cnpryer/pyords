@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import logging
 
 class BasicKMeansHelper:
     def __init__(self):
@@ -37,8 +38,6 @@ class BasicDBSCANHelper:
         self.fig.canvas.draw()
 
     def update(self, labels):
-        cmap = plt.cm.get_cmap('hsv', len(set(labels)))
-        self.colors = [cmap(i) if i>=0 else 'black' for i in labels]
         self.axis.clear()
-        self.axis.scatter(self.x, self.y, facecolor=self.colors)
+        self.axis.scatter(self.x, self.y, c=labels)
         self.fig.canvas.draw()
