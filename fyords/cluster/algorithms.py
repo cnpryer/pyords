@@ -17,12 +17,14 @@ class KMeans:
         _dict = {'k': self.k}
         try:
             _dict['n X'] = len(self.X)
-            _dict['n centroids'] = len(self.centroids)
+            _dict['n centroids'] = len(x[~np.isnan(self.centroids)])
         except:
             logging.warning('X has not been set.')
         return _dict
 
     def fit(self, x, y):
+        self.x = x
+        self.y = y
         self.X = list(zip(x, y))
         self.centroids = self.get_centroids()
         if self.viz:
@@ -42,13 +44,13 @@ class KMeans:
 
     def get_centroids(self):
         """get centroids using instance data"""
-        c_x = np.random.randint(np.min(self.X), np.max(self.X), size=self.k)
-        c_y = np.random.randint(np.min(self.X), np.max(self.X), size=self.k)
+        c_x = np.random.randint(np.min(self.x), np.max(self.x), size=self.k)
+        c_y = np.random.randint(np.min(self.y), np.max(self.y), size=self.k)
         return np.array(list(zip(c_x, c_y)), dtype=np.float32)
 
     def predict(self, x=None, y=None):
         if x is None or y is None:
-            X = self.X
+            X = list(self.X)
         else:
             X = list(zip(x, y))
 
