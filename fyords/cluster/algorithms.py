@@ -73,6 +73,9 @@ class KMeans:
             if np.isnan(self.delta):
                 logging.error('failed to utilize k-centroids') # TODO: debug
                 break
+            x2 = [c[0] for c in self.centroids]
+            y2 = [c[1] for c in self.centroids]
+            self.viz.update(x2, y2)
             run += 1
 
 class DBSCAN:
@@ -135,3 +138,5 @@ class DBSCAN:
                 self.clusters[i] = -1 # noise
             else:
                 cluster += 1
+                self.build_cluster(i, points, cluster)
+                self.viz.update(self.clusters)

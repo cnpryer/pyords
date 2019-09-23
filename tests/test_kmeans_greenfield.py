@@ -20,7 +20,7 @@ def test_knownk_kmeans(kopen=False):
     lab.close('all')
     viz = BasicKMeansHelper()
 
-    k = 12 # desired n locations solution
+    k = 3 # desired n locations solution
     kmeans = KMeans(k, viz)
     kmeans.fit(x, y)
     kmeans.predict()
