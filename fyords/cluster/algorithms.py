@@ -5,8 +5,9 @@ import logging
 
 
 class KMeans:
-    def __init__(self, k=8):
+    def __init__(self, k=8, viz=None):
         self.k = k
+        self.viz = viz
 
     @staticmethod
     def get_dist(a, b, axis=1):
@@ -24,6 +25,12 @@ class KMeans:
     def fit(self, x, y):
         self.X = list(zip(x, y))
         self.centroids = self.get_centroids()
+        if self.viz:
+            self.viz.x1 = x
+            self.viz.y1 = y
+            x2 = [c[0] for c in self.centroids]
+            y2 = [c[1] for c in self.centroids]
+            self.viz.update(x2, y2)
         logging.info('initial centroids: %s' % self.centroids)
         self.old_centroids = np.zeros(self.centroids.shape)
         self.clusters = np.zeros(len(self.X))

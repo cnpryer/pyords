@@ -12,7 +12,7 @@ import logging
 root_dir = path.dirname(path.abspath(__name__))
 this_dir = path.join(root_dir, 'tests')
 
-n_generations = 1000
+n_generations = 100
 population_size = 10
 
 # each index position of the first individual maps to same position in
