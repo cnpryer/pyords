@@ -72,9 +72,10 @@ class KMeans:
             run += 1
 
 class DBSCAN:
-    def __init__(self, x, y, epsilon=0.5, minpts=2):
+    def __init__(self, x, y, epsilon=0.5, minpts=2, viz=None):
         self.epsilon = epsilon
         self.minpts = minpts
+        self.viz = viz
 
     def to_dict(self):
         _dict = {'epsilon': self.epsilon, 'minpts': self.minpts}
@@ -87,6 +88,10 @@ class DBSCAN:
     def fit(self, x, y):
         self.X = list(zip(x, y))
         self.clusters = np.zeros(len(self.X))
+        if self.viz:
+            self.viz.x = x
+            self.viz.y = y
+            self.viz.update(self.clusters)
 
     @staticmethod
     def get_neighbors(X, i, epsilon):

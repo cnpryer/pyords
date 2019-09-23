@@ -1,4 +1,6 @@
 from fyords.cluster import DBSCAN
+from fyords.cluster.visualizations import BasicDBSCANHelper
+import matplotlib.pylab as lab
 import pandas as pd
 import numpy as np
 from os import path
@@ -16,8 +18,16 @@ def test_basic_dbscan():
     x = df.latitude.values + 90
     y = df.longitude.values + 180
 
-    dbscan = DBSCAN(epsilon, minpts)
+    viz = BasicDBSCANHelper()
+
+    dbscan = DBSCAN(epsilon, minpts, viz=viz)
     dbscan.fit(x, y)
     dbscan.predict()
     logging.info('dbscan configuration: %s' % dbscan.to_dict())
+    logging.info('dbscan unique result: %s' % set(dbscan.clusters))
+    dbscan.viz.update(dbscan.clusters)
     assert len(dbscan.X) == len(dbscan.clusters)
+
+if __name__ == '__main__':
+    test_basic_dbscan()
+    lab.show(block=True)

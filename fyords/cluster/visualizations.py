@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-class BasicAlgoHelper:
+class BasicKMeansHelper:
     def __init__(self):
         plt.ion() # interactive mode
         self.x1 = []
@@ -22,4 +22,22 @@ class BasicAlgoHelper:
         y = list(self.y1) + list(self.y2)
         colors = ['blue']*len(self.x1) + ['red']*len(self.x2)
         self.axis.scatter(x, y, color=colors)
+        self.fig.canvas.draw()
+
+class BasicDBSCANHelper:
+    def __init__(self):
+        plt.ion() # interactive mode
+        self.x = []
+        self.y = []
+        self.colors = []
+        self.fig = plt.figure()
+        self.axis = self.fig.add_subplot(211)
+        self.axis.scatter(self.x, self.y)
+        self.fig.canvas.draw()
+
+    def update(self, labels):
+        cmap = plt.cm.get_cmap('hsv', len(set(labels)))
+        self.colors = [cmap(i) if i>=0 else 'black' for i in labels]
+        self.axis.clear()
+        self.axis.scatter(self.x, self.y, facecolor=self.colors)
         self.fig.canvas.draw()
