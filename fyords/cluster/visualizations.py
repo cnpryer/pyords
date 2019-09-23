@@ -21,6 +21,7 @@ class BasicKMeansHelper:
         x = list(self.x1) + list(self.x2)
         y = list(self.y1) + list(self.y2)
         colors = ['blue']*len(self.x1) + ['red']*len(self.x2)
+        self.axis.clear()
         self.axis.scatter(x, y, color=colors)
         self.fig.canvas.draw()
 
