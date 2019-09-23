@@ -1,5 +1,5 @@
 from fyords.cluster import KMeans
-from fyords.cluster.visualizations import BasicAlgoHelper
+from fyords.cluster.visualizations import BasicKMeansHelper
 import matplotlib.pylab as lab
 import pandas as pd
 import numpy as np
@@ -16,7 +16,7 @@ def test_knownk_kmeans(kopen=False):
     x = df.latitude.values + 90
     y = df.longitude.values + 180
 
-    viz = BasicAlgoHelper()
+    viz = BasicKMeansHelper()
 
     k = 2 # desired n locations solution
     kmeans = KMeans(k, viz)
