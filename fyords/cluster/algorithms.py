@@ -20,7 +20,6 @@ class KMeans:
             nonnull = ~np.isnan(self.centroids)
             _dict['n centroids'] = len(self.centroids[nonnull.all(axis=1)])
         except:
-
             logging.warning('X has not been set.')
         return _dict
 
@@ -55,7 +54,7 @@ class KMeans:
             X = list(self.X)
         else:
             X = list(zip(x, y))
-
+        
         run = 0
         while self.delta != 0:
             for i in range(len(X)):
@@ -104,7 +103,6 @@ class DBSCAN:
     def get_neighbors(X, i, epsilon):
         neighbors = []
         for j in range(0, len(X)):
-            # TODO: tuple - tuple not accepted; understand
             a = np.array(X[i])
             b = np.array(X[j])
             if np.linalg.norm(a-b) < epsilon:
@@ -114,12 +112,11 @@ class DBSCAN:
     def build_cluster(self, i, neighbors, cluster):
         self.clusters[i] = cluster
         for j in neighbors:
-            if self.clusters[j] == -1: # TODO: is this redundant (see below)
+            if self.clusters[j] == -1:
                 self.clusters[j] = cluster
             elif self.clusters[j] == 0:
                 self.clusters[j] = cluster
                 points = self.get_neighbors(self.X, j, self.epsilon)
-
                 if len(points) >= self.minpts:
                     neighbors += points
 
@@ -135,7 +132,7 @@ class DBSCAN:
                 continue
             points = self.get_neighbors(X, i, self.epsilon)
             if len(points) < self.minpts:
-                self.clusters[i] = -1 # noise
+                self.clusters[i] = -1
             else:
                 cluster += 1
                 self.build_cluster(i, points, cluster)
