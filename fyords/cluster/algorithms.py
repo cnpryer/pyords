@@ -54,7 +54,7 @@ class KMeans:
             X = list(self.X)
         else:
             X = list(zip(x, y))
-        
+
         run = 0
         while self.delta != 0:
             for i in range(len(X)):
@@ -72,9 +72,10 @@ class KMeans:
             if np.isnan(self.delta):
                 logging.error('failed to utilize k-centroids') # TODO: debug
                 break
-            x2 = [c[0] for c in self.centroids]
-            y2 = [c[1] for c in self.centroids]
-            self.viz.update(x2, y2)
+            if self.viz:
+                x2 = [c[0] for c in self.centroids]
+                y2 = [c[1] for c in self.centroids]
+                self.viz.update(x2, y2)
             run += 1
 
 class DBSCAN:
@@ -136,4 +137,5 @@ class DBSCAN:
             else:
                 cluster += 1
                 self.build_cluster(i, points, cluster)
+            if self.viz:
                 self.viz.update(self.clusters)
