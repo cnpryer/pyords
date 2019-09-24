@@ -51,7 +51,11 @@ algorithm for heuristic solutions.
 [Genetic Algorithm](https://en.wikipedia.org/wiki/Genetic_algorithm).
 
 ### solver
-1. [Route optimization](https://en.wikipedia.org/wiki/Vehicle_routing_problem)
+1. [Route optimization](https://en.wikipedia.org/wiki/Vehicle_routing_problem).
+
+### distance
+1. [Haversine distance](https://en.wikipedia.org/wiki/Haversine_formula).
+2. Distance matrix preprocessing.
 
 ## Collaborating
 Since this is a learning project, the code will be developed with the

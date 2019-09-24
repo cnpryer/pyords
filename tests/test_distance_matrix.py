@@ -1,4 +1,4 @@
-from fyords.preprocess.distance.matrix import haversine_distance_matrix
+from fyords.distance.matrix import haversine_distance_matrix
 import pandas as pd
 import numpy as np
 
