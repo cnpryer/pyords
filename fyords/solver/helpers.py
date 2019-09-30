@@ -3,6 +3,20 @@ from ortools.constraint_solver import pywrapcp
 import numpy as np
 import logging
 
+def ovrp_to_df(df, solution):
+    """Assuming df row positions lines up with the input to the Google OR
+    model - 1 (ovrp begins with a fake node), apply a shipment_id to the
+    dataframe."""
+    shipment_id = np.zeros(len(df), dtype=np.int32) - 1
+    vehicles = [obj for obj in solution if 'vehicle' in list(obj)]
+    for i, vehicle in enumerate(vehicles):
+        stops = np.array([n for n in list(vehicle['stops']) if n > 0])
+        nodes = stops - 1
+        if len(nodes) > 0:
+            shipment_id[nodes] = i
+    return shipment_id
+
+
 class GoogleORCVRP:
     def __init__(self, distances, demand, vehicles, depot, max_seconds):
         self.distances = distances
@@ -31,7 +45,7 @@ class GoogleORCVRP:
         total_load = 0
         for vehicle in range(self.n_vehicles):
             i = self.model.Start(vehicle)
-            info = {'vehicle': vehicle, 'route': ''}
+            info = {'vehicle': vehicle, 'route': '', 'stops': set()}
             route_distance = 0
             route_load = 0
             while not self.model.IsEnd(i):
@@ -42,6 +56,7 @@ class GoogleORCVRP:
                 i = self.assignment.Value(self.model.NextVar(i))
                 route_distance += self.model.GetArcCostForVehicle(
                     previous_i, i, vehicle)
+                info['stops'].add(node)
             info['route'] += ' {0} Load({1})'.format(
                 self.manager.IndexToNode(i), route_load)
             info['route'] = info['route'][1:] # strip leading zero
