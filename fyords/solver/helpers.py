@@ -37,13 +37,14 @@ class GoogleORCVRP:
             while not self.model.IsEnd(i):
                 node = self.manager.IndexToNode(i)
                 route_load += self.demand[node]
-                info['route'] += '{0} Load({1})'.format(node, route_load)
+                info['route'] += ' {0} Load({1})'.format(node, route_load)
                 previous_i = i
                 i = self.assignment.Value(self.model.NextVar(i))
                 route_distance += self.model.GetArcCostForVehicle(
                     previous_i, i, vehicle)
             info['route'] += ' {0} Load({1})'.format(
                 self.manager.IndexToNode(i), route_load)
+            info['route'] = info['route'][1:] # strip leading zero
             info['dist'] = route_distance
             info['load'] = route_load
             self.solution.append(info)
