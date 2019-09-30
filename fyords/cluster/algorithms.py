@@ -36,7 +36,7 @@ class KMeans:
             self.viz.update(x2, y2)
         logging.info('initial centroids: %s' % self.centroids)
         self.old_centroids = np.zeros(self.centroids.shape)
-        self.clusters = np.zeros(len(self.X))
+        self.clusters = np.zeros(len(self.X), dtype=np.int32)
         self.delta = self.get_dist(self.centroids, self.old_centroids, None)
 
     def get_k(self):
@@ -94,7 +94,7 @@ class DBSCAN:
 
     def fit(self, x, y):
         self.X = list(zip(x, y))
-        self.clusters = np.zeros(len(self.X))
+        self.clusters = np.zeros(len(self.X), dtype=np.int32)
         if self.viz:
             self.viz.x = x
             self.viz.y = y
