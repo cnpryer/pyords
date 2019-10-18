@@ -1,5 +1,6 @@
 """Demand Forecastability for Inventory Strategy"""
 import pandas as pd
+import numpy as np
 import os
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__name__))
@@ -56,7 +57,7 @@ def calculate_smooth(period_df, attributes=['sku', 'origin_id'],
                       cv2.rename('cv2'),
                       is_smooth.rename('is_smooth')], axis=1)
 
-def test_main():
+def test_one():
     period_df = get_period(period_len='Q')
     assert not period_df.empty
 
@@ -64,5 +65,39 @@ def test_main():
     result = calculate_smooth(period_df, attributes)
     assert not result.empty
 
+def test_all():
+    period_df = get_period(period_len='Q')
+    assert not period_df.empty
+
+    class Result:
+        def __init__(self):
+            self.attributes = []
+            self.percent_smooth = np.nan
+            self.data = pd.DataFrame()
+
+        def format_result(self):
+            return {
+                'attributes': self.attributes,
+                'percent_smooth': self.format_percent_smooth()
+            }
+
+        def format_percent_smooth(self):
+            return '{:,.2f}%'.format(self.percent_smooth*100)
+
+    results = {}
+    for level in config.level:
+        result = Result()
+        attributes = get_attributes(level)
+        result.attributes = attributes
+        data = calculate_smooth(period_df, attributes)
+        result.data = data.copy()
+        result.percent_smooth = data.is_smooth.sum() / len(data)
+        results[level] = result
+        print(result.format_result())
+
+    assert len(results) == len(config)
+    assert all(not pd.isnull(results[i].percent_smooth) for i in results)
+
 if __name__ == '__main__':
-    test_main()
+    test_one()
+    test_all()
