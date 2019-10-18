@@ -52,7 +52,9 @@ def calculate_smooth(period_df, attributes=['sku', 'origin_id'],
     adi = get_adi(period_df, attributes, num_col)
     cv2 = get_cv2(attributes, num_col)
     is_smooth = (adi < 1.32) & (cv2 < 0.49)
-    return is_smooth.sum() / len(is_smooth)
+    return pd.concat([adi.rename('adi'),
+                      cv2.rename('cv2'),
+                      is_smooth.rename('is_smooth')], axis=1)
 
 def test_main():
     period_df = get_period(period_len='Q')
@@ -60,7 +62,7 @@ def test_main():
 
     attributes = config.attributes.str.split('+').tolist()[0]
     result = calculate_smooth(period_df, attributes)
-    assert result <= 1 and result >= -1
+    assert not result.empty
 
 if __name__ == '__main__':
     test_main()
