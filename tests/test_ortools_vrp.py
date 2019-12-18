@@ -12,7 +12,7 @@ def test_basic_cvrp():
     df = pd.read_csv(path.join(this_dir, 'vrp_testing_data.csv'))[:20]
     distances = ovrp_haversine_distance_matrix(
         lats=df.latitude.values, lons=df.longitude.values, unit='mi')
-    vehicles = [100]*10
+    vehicles = [[1, 100]]*10
     demand = np.insert(df.pallets.values, 0, 0)
     cvrp = GoogleORCVRP(distances=distances, demand=demand,
         vehicles=vehicles, depot=0, max_seconds=30)

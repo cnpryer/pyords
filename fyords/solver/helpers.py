@@ -22,7 +22,8 @@ class GoogleORCVRP:
         self.distances = distances
         self.n_nodes = len(distances)
         self.demand = demand
-        self.vehicles = np.array(vehicles)
+        self.vehicle_min_capacities = np.array([i[0] for i in vehicles])
+        self.vehicle_max_capacities = np.array([i[1] for i in vehicles])
         self.n_vehicles = len(vehicles)
         self.depot = depot
         self.max_seconds = max_seconds
@@ -34,7 +35,7 @@ class GoogleORCVRP:
             'total demand': self.demand.sum(),
             'average demand': self.demand.mean(),
             'n vehicles': self.n_vehicles,
-            'average vehicle capacity': self.vehicles.mean(),
+            'average vehicle capacity': self.vehicle_max_capacities.mean(),
             'depot': self.depot,
             'max seconds': self.max_seconds,
             'solved': len(self.solution) > 0
@@ -93,8 +94,15 @@ class GoogleORCVRP:
 
         # null capacity slack (arg: 0); start cumul to zero (arg: True)
         self.model.AddDimensionWithVehicleCapacity(
-            demand_callback_index, 0, self.vehicles, True, 'Capacity')
-
+            demand_callback_index, # function which return the load at each location (cf. cvrp.py example)
+            0, # null capacity slack
+            self.vehicle_max_capacities, # vehicle maximum capacity
+            True, # start cumul to zero
+            'Capacity')
+        capacity_dimension = self.model.GetDimensionOrDie('Capacity')
+        for i, n in enumerate(self.vehicle_min_capacities):
+            capacity_dimension.CumulVar(self.model.End(i)).RemoveInterval(0, int(n))
+        
     def set_search_params(self):
         self.search_parameters = pywrapcp.DefaultRoutingSearchParameters()
         self.search_parameters.first_solution_strategy = \
