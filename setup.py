@@ -9,7 +9,7 @@ with open(os.path.join(currdir, 'README.md')) as f:
     long_description = f.read()
 
 install_requires = []
-with open(os.path.join(currdir, 'requirements.txt') as f:
+with open(os.path.join(currdir, 'requirements.txt')) as f:
     install_requires = f.read().splitlines()
 
 setup(name='pyords',
