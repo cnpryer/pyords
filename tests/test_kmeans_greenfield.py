@@ -1,5 +1,5 @@
-from fyords.cluster import KMeans
-from fyords.cluster.visualizations import BasicKMeansHelper
+from ..pyords.cluster import KMeans
+from ..pyords.cluster.visualizations import BasicKMeansHelper
 import matplotlib.pylab as lab
 import pandas as pd
 import numpy as np

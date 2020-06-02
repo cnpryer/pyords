@@ -1,7 +1,7 @@
 """Use case for solving VRP using a genetic algorithm"""
-from fyords.genetic_algorithm import BasicGeneticAlgorithm
-from fyords.genetic_algorithm import environments as envs
-from fyords.genetic_algorithm.visualizations import BasicAlgoHelper
+from ..pyords.genetic_algorithm import BasicGeneticAlgorithm
+from ..pyords.genetic_algorithm import environments as envs
+from ..pyords.genetic_algorithm.visualizations import BasicAlgoHelper
 import matplotlib.pylab as lab
 import pandas as pd
 import numpy as np

@@ -1,5 +1,5 @@
-from fyords.cluster import DBSCAN
-from fyords.cluster.visualizations import BasicDBSCANHelper
+from ..pyords.cluster import DBSCAN
+from ..pyords.cluster.visualizations import BasicDBSCANHelper
 import matplotlib.pylab as lab
 import pandas as pd
 import numpy as np

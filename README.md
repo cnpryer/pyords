@@ -1,14 +1,23 @@
-[![CircleCI](https://circleci.com/gh/christopherpryer/fyords/tree/master.svg?style=svg)](https://circleci.com/gh/christopherpryer/fyords/tree/master)
-[![codebeat badge](https://codebeat.co/badges/f72db301-fd66-4c05-b1ca-9b8c8196f06e)](https://codebeat.co/projects/github-com-christopherpryer-fyords-master)
+![](https://github.com/christopherpryer/pyords/workflows/build/badge.svg)
 
-# fyords
+# pyords
 A library for operations research, data science, and financial engineering.
 
-### Info
-The purpose of developing this library is for personal learning and professional
-development.
+## features
 
-**Subjects:**
+- pyords.transopt - transportation optimization
+- pyords.netopt - network optimization
+- pyords.schedopt - schedule optimization
+
+## implementations
+
+- graph theory
+- genetic algorithm
+- simulation
+- machine learning
+
+## motivation behind the project
+Working solo in an engineering team, I want to dedicate a fair amount of time to productionalizing the different skills I've been working on. This library will help me expose myself more to the following:
 
 1. [Open-source software development](https://en.wikipedia.org/wiki/Open-source_software_development).
 2. [Data Science](https://en.wikipedia.org/wiki/Data_science).
@@ -28,18 +37,16 @@ or JavaScript.
 [Supply Chain Guru](https://www.llamasoft.com/products/design/supply-chain-guru/),
 [Keras](https://en.wikipedia.org/wiki/Keras) and/or [Hadoop](https://en.wikipedia.org/wiki/Apache_Hadoop),
 [AWS](https://en.wikipedia.org/wiki/Amazon_Web_Services),
-[GCP](https://en.wikipedia.org/wiki/Google_Cloud_Platform).
+[GCP](https://en.wikipedia.org/wiki/Google_Cloud_Platform), [Vagrant](https://www.vagrantup.com/).
 
-
-## The Library
-The code provides everything from low level optimization engines to higher level
-helper name-spaces.
+# Development & Documentation
+Design is up for discussion. I'm going to start by just *namespacing* most of the unique features implemented. Some currently developed features include the following:
 
 ### cluster
 *cluster* is aimed at identifying groups in data. See
 [clustering](https://en.wikipedia.org/wiki/Cluster_analysis).
 
-**Current Scope:**
+#### current scope
 
 1. [Greenfield Analysis](http://supplychaindetective.com/2017/08/12/network-strategy-part-1-greenfield-analysis/) -
 a facility location and operation problem. *cluster* will provide a clustering
@@ -56,10 +63,3 @@ algorithm for heuristic solutions.
 ### distance
 1. [Haversine distance](https://en.wikipedia.org/wiki/Haversine_formula).
 2. Distance matrix preprocessing.
-
-## Collaborating
-Since this is a learning project, the code will be developed with the
-intention of solving a real-world problem pertaining to the developer. This
-will impact the evolution of this library's design. It is required for this
-evolution of design strategy to be followed if you would like to collaborate.
-Each problem-set must be developed in its own feature branch.
