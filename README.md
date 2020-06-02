@@ -1,4 +1,4 @@
-![](https://github.com/christopherpryer/pyords/workflows/build/badge.svg)
+![python package](https://github.com/christopherpryer/pyords/workflows/Python%20package/badge.svg)
 
 # pyords
 A library for operations research, data science, and financial engineering.
