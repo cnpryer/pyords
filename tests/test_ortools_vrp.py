@@ -1,5 +1,5 @@
 from ..pyords.distance.matrix import ovrp_haversine_distance_matrix
-from ..pyords.solver import GoogleORCVRP
+from ..pyords.solver.helpers import GoogleORCVRP
 import pandas as pd
 import numpy as np
 import logging

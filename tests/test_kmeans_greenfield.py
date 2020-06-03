@@ -1,4 +1,4 @@
-from ..pyords.cluster import KMeans
+from ..pyords.cluster.algorithms import KMeans
 from ..pyords.cluster.visualizations import BasicKMeansHelper
 import matplotlib.pylab as lab
 import pandas as pd

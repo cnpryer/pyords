@@ -1,4 +1,4 @@
-from ..pyords.cluster import DBSCAN
+from ..pyords.cluster.algorithms import DBSCAN
 from ..pyords.cluster.visualizations import BasicDBSCANHelper
 import matplotlib.pylab as lab
 import pandas as pd
