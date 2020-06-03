@@ -1,3 +1,10 @@
+# Vagrant
+.vagrant
+registry
+vagrantup.bat
+/vault
+/certs/localrancher*
+
 .vscode
 
 # Byte-compiled / optimized / DLL files
