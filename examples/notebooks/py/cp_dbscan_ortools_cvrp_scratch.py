@@ -84,7 +84,7 @@ from ortools.constraint_solver import pywrapcp
 # inputs
 distances = ovrp_haversine_distance_matrix(
     lats=df.latitude.values, lons=df.longitude.values, unit='mi')
-vehicles = [26]*100
+vehicles = [26]*len(distances)
 demand = np.insert(df.pallets.values, 0, 0)
 
 # scripting ortools model construction & method.
@@ -190,7 +190,7 @@ def plot(dataframe:pd.DataFrame, trace_by:pd.Series):
     )
     
 plot(
-    df.loc[df.vehicle.astype(int).isin(multistop_vehicles)],
-    df.loc[df.vehicle.astype(int).isin(multistop_vehicles)].vehicle.astype(str)
+    df.loc[df.vehicle.fillna(-1).astype(int).isin(multistop_vehicles)],
+    df.loc[df.vehicle.fillna(-1).astype(int).isin(multistop_vehicles)].vehicle.astype(str)
 )
 
