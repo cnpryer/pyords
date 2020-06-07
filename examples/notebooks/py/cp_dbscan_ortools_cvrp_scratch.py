@@ -178,5 +178,19 @@ for vehicle in vehicles_w_loads:
 
 # look at multistop vehicles
 multistop_vehicles =     [int(v['vehicle']) for v in vehicles_w_loads if len(v['stops']) > 2]
-df.loc[df.vehicle.astype(int).isin(multistop_vehicles)].sort_values('vehicle')
+
+def plot(dataframe:pd.DataFrame, trace_by:pd.Series):
+    return pe.scatter_geo(
+        dataframe, 
+        lat='latitude', 
+        lon='longitude', 
+        size='pallets', 
+        scope='usa',
+        color=trace_by
+    )
+    
+plot(
+    df.loc[df.vehicle.astype(int).isin(multistop_vehicles)],
+    df.loc[df.vehicle.astype(int).isin(multistop_vehicles)].vehicle.astype(str)
+)
 
