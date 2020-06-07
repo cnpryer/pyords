@@ -157,5 +157,12 @@ def get_solution():
         
     return solution
 
-get_solution()
+solution = get_solution()
+
+output_vehicles = solution[:-2] # TODO: fix this
+vehicleindex_w_moststops = np.argmax([len(v['stops']) for v in output_vehicles])
+print('total vehicles: %s' % len(output_vehicles))
+print('total load: %s' % solution[-1])
+print('total input load: %s' % demand.sum())
+print('max stop sequence: %s' % output_vehicles[vehicleindex_w_moststops]['stops'])
 
