@@ -37,7 +37,7 @@ or JavaScript.
 [Google OR Tools (ortools)](https://developers.google.com/optimization/),
 [Pyomo](https://en.wikipedia.org/wiki/Pyomo),
 [Supply Chain Guru](https://www.llamasoft.com/products/design/supply-chain-guru/),
-[Keras](https://en.wikipedia.org/wiki/Keras) and/or [Hadoop](https://en.wikipedia.org/wiki/Apache_Hadoop),
+[Keras](https://en.wikipedia.org/wiki/Keras), [Hadoop](https://en.wikipedia.org/wiki/Apache_Hadoop),
 [AWS](https://en.wikipedia.org/wiki/Amazon_Web_Services),
 [GCP](https://en.wikipedia.org/wiki/Google_Cloud_Platform), [Vagrant](https://www.vagrantup.com/).
 
