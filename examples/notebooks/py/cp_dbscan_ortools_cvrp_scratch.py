@@ -160,11 +160,23 @@ def get_solution():
 solution = get_solution()
 
 output_vehicles = solution[:-2] # TODO: fix this
-vehicles_w_loads = [v for v in output_vehicles if v['load'] > 0]
 vehicleindex_w_moststops = np.argmax([len(v['stops']) for v in output_vehicles])
+vehicles_w_loads = [v for v in output_vehicles if v['load'] > 0]
 print('total vehicles: %s' % len(output_vehicles))
 print('total vehicles w loads: %s' % len(vehicles_w_loads))
 print('total load: %s' % solution[-1])
 print('total input load: %s' % demand.sum())
 print('max stop sequence: %s' % output_vehicles[vehicleindex_w_moststops]['stops'])
+
+
+# In[ ]:
+
+
+for vehicle in vehicles_w_loads:
+    locs = np.array(list(vehicle['stops'])[1:]) - 1
+    df.loc[locs, 'vehicle'] = vehicle['vehicle']
+
+# look at multistop vehicles
+multistop_vehicles =     [int(v['vehicle']) for v in vehicles_w_loads if len(v['stops']) > 2]
+df.loc[df.vehicle.astype(int).isin(multistop_vehicles)].sort_values('vehicle')
 
