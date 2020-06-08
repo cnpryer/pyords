@@ -28,12 +28,39 @@ def get_ortools_solution_dataframe(dataframe:pd.DataFrame):
 
     TODO: return dataframe with vehicle col
     """
-    
+    dataframe = dataframe.reset_index(drop=True)
     app = OrtoolsCvrpDataFrame(
-        dataframe,
+        dataframe.copy(),
         depot_index=0, 
         max_solve_seconds=30
     )
-    app.solve()
-    
+    app.solve()    
+
     return app.df
+
+def get_many_ortools_solutions_dataframe(dataframe:pd.DataFrame, segmentation_col:str):
+    result = pd.DataFrame(columns=dataframe.columns.tolist()+['vehicle'])
+    
+    # TODO: create concurrent tasks for segment optimizations
+    for segment in dataframe[segmentation_col].unique():
+        segdf = dataframe[dataframe[segmentation_col] == segment].copy()
+        
+        if segment not in [np.nan, -1]:
+            segdf = get_ortools_solution_dataframe(segdf)
+        
+        # vehicle tag
+        if 'vehicle' not in segdf.columns:
+            segdf['vehicle'] = -1
+        
+        segdf.vehicle = (
+            segdf.vehicle.fillna(-1).astype(int).astype(str) 
+            + '_' + segdf[segmentation_col].fillna(-1).astype(int).astype(str)
+        )
+        
+        not_segmented = (segdf[segmentation_col].isin([np.nan, 'nan', -1, None]))
+        not_routed = (segdf.vehicle.str.split('_').str[0] == '-1')
+        segdf.loc[not_segmented | not_routed, 'vehicle'] = None    
+        
+        result = result.append(segdf, sort=False)
+        
+    return result
