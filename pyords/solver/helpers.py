@@ -1,9 +1,13 @@
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
+from ..distance.matrix import ovrp_haversine_distance_matrix
+import pandas as pd
 import numpy as np
+
 import logging
 
-def ovrp_to_df(df, solution):
+
+def ovrp_to_df(df:pd.DataFrame, solution:list): # TODO: do something with this
     """Assuming df row positions lines up with the input to the Google OR
     model - 1 (ovrp begins with a fake node), apply a shipment_id to the
     dataframe."""
@@ -14,48 +18,69 @@ def ovrp_to_df(df, solution):
         nodes = stops - 1
         if len(nodes) > 0:
             shipment_id[nodes] = i
+
     return shipment_id
 
+def get_manager_basic(distances:list, vehicles:list, depot_index:int):
+    return pywrapcp.RoutingIndexManager(len(distances), len(vehicles), depot_index)
 
-class GoogleORCVRP:
-    def __init__(self, distances, demand, vehicles, depot, max_seconds):
-        self.distances = distances
-        self.n_nodes = len(distances)
-        self.demand = demand
-        self.vehicle_min_capacities = np.array([i[0] for i in vehicles])
-        self.vehicle_max_capacities = np.array([i[1] for i in vehicles])
-        self.n_vehicles = len(vehicles)
-        self.depot = depot
-        self.max_seconds = max_seconds
-        self.solution = []
+def get_search_config_basic(max_solve_seconds:int):
+    search_params = pywrapcp.DefaultRoutingSearchParameters()
+    search_params.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
+    search_params.time_limit.seconds = max_solve_seconds
+    
+    return search_params
+
+class OrtoolsCvrpDataFrame:
+    def __init__(self, df:pd.DataFrame, depot_index:int=0, max_solve_seconds:int=30):
+        self.df = df
+        self.depot_index = depot_index
+        self.max_solve_seconds = max_solve_seconds
+
+        self.distances = ovrp_haversine_distance_matrix(
+            lats=df.latitude.values,
+            lons=df.longitude.values,
+            unit='mi'
+        )
+        self.demand = np.insert(df.pallets.values, 0, 0)
+        self.vehicles = [26]*len(self.distances) # TODO: abstract this
+
+    def set_max_solve_seconds(self, seconds:int=30):
+        self.max_solve_seconds = seconds
+    
+    def set_depot_index(self, index:int=0):
+        self.depot_index = index
 
     def to_dict(self):
+        logging.warning('this function needs to be updated for v0.0.4 refactor')
+        
         return {
-            'n nodes': self.n_nodes,
-            'total demand': self.demand.sum(),
-            'average demand': self.demand.mean(),
-            'n vehicles': self.n_vehicles,
-            'average vehicle capacity': self.vehicle_max_capacities.mean(),
-            'depot': self.depot,
-            'max seconds': self.max_seconds,
-            'solved': len(self.solution) > 0
+            'n nodes': None,
+            'total demand': None,
+            'average demand': None,
+            'n vehicles': None,
+            'average vehicle capacity': None,
+            'depot': None,
+            'max seconds': None,
+            'solved': None > 0
         }
 
-    def save_solution(self):
+    def get_solution(self, result, model:pywrapcp.RoutingModel):
         total_distance = 0
         total_load = 0
-        for vehicle in range(self.n_vehicles):
-            i = self.model.Start(vehicle)
+        solution = []
+        for vehicle in range(len(self.vehicles)):
+            i = model.Start(vehicle)
             info = {'vehicle': vehicle, 'route': '', 'stops': set()}
             route_distance = 0
             route_load = 0
-            while not self.model.IsEnd(i):
+            while not model.IsEnd(i):
                 node = self.manager.IndexToNode(i)
                 route_load += self.demand[node]
                 info['route'] += ' {0} Load({1})'.format(node, route_load)
                 previous_i = i
-                i = self.assignment.Value(self.model.NextVar(i))
-                route_distance += self.model.GetArcCostForVehicle(
+                i = result.Value(model.NextVar(i))
+                route_distance += model.GetArcCostForVehicle(
                     previous_i, i, vehicle)
                 info['stops'].add(node)
             info['route'] += ' {0} Load({1})'.format(
@@ -63,57 +88,57 @@ class GoogleORCVRP:
             info['route'] = info['route'][1:] # strip leading zero
             info['dist'] = route_distance
             info['load'] = route_load
-            self.solution.append(info)
+            solution.append(info)
             total_distance += route_distance
             total_load += route_load
-        self.solution.append({'total dist': total_distance})
-        self.solution.append({'total load': total_load})
-
-    def distance_callback(self, i, j):
+    
+        return solution
+    
+    def distance_callback_basic(self, i:int, j:int):
         """index of from (i) and to (j)"""
         node_i = self.manager.IndexToNode(i)
         node_j = self.manager.IndexToNode(j)
+
         return self.distances[node_i][node_j]
 
-    def demand_callback(self, i):
+    def demand_callback_basic(self, i:int):
         """capacity constraint"""
         node = self.manager.IndexToNode(i)
+
         return self.demand[node]
 
-    def set_manager(self):
-        self.manager = pywrapcp.RoutingIndexManager(
-            self.n_nodes, self.n_vehicles, self.depot)
+    def get_model(self, manager:pywrapcp.RoutingIndexManager, distance_func, demand_func):
+        model = pywrapcp.RoutingModel(manager)
+        transit_callback_index = model.RegisterTransitCallback(distance_func)
+        model.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 
-    def set_model(self):
-        self.model = pywrapcp.RoutingModel(self.manager)
-        transit_callback_index = \
-            self.model.RegisterTransitCallback(self.distance_callback)
-        self.model.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
-        demand_callback_index = \
-            self.model.RegisterUnaryTransitCallback(self.demand_callback)
+        demand_callback_index = model.RegisterUnaryTransitCallback(demand_func)
 
         # null capacity slack (arg: 0); start cumul to zero (arg: True)
-        self.model.AddDimensionWithVehicleCapacity(
+        model.AddDimensionWithVehicleCapacity(
             demand_callback_index, # function which return the load at each location (cf. cvrp.py example)
             0, # null capacity slack
-            self.vehicle_max_capacities, # vehicle maximum capacity
+            np.array([cap for cap in self.vehicles]), # vehicle maximum capacity
             True, # start cumul to zero
-            'Capacity')
-        capacity_dimension = self.model.GetDimensionOrDie('Capacity')
-        for i, n in enumerate(self.vehicle_min_capacities):
-            capacity_dimension.CumulVar(self.model.End(i)).RemoveInterval(0, int(n))
-        
-    def set_search_params(self):
-        self.search_parameters = pywrapcp.DefaultRoutingSearchParameters()
-        self.search_parameters.first_solution_strategy = \
-            routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
-        self.search_parameters.time_limit.seconds = self.max_seconds
+            'Capacity'
+        )
+        #capacity_dimension = self.model.GetDimensionOrDie('Capacity')
+        #for i, n in enumerate(self.vehicle_min_capacities):
+        #    capacity_dimension.CumulVar(self.model.End(i)).RemoveInterval(0, int(n))
+
+        return model
 
     def solve(self):
-        self.set_manager()
-        self.set_model()
-        self.set_search_params()
-        self.assignment = \
-            self.model.SolveWithParameters(self.search_parameters)
-        if self.assignment:
-            self.save_solution()
+        self.manager = get_manager_basic(self.distances, self.vehicles, self.depot_index)
+        search_config = get_search_config_basic(self.max_solve_seconds)
+        model = self.get_model(
+            self.manager,
+            distance_func=self.distance_callback_basic,
+            demand_func=self.demand_callback_basic    
+        )
+        result = model.SolveWithParameters(search_config)
+
+        if result:
+            return self.get_solution(result, model)
+            
+        return None
