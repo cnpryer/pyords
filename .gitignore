@@ -1,3 +1,6 @@
+# added windows venv
+venv_windows
+
 # Vagrant
 .vagrant
 registry
