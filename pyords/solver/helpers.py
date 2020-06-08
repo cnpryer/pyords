@@ -139,6 +139,17 @@ class OrtoolsCvrpDataFrame:
         result = model.SolveWithParameters(search_config)
 
         if result:
-            return self.get_solution(result, model)
+            solution = self.get_solution(result, model)
+            output_vehicles = solution[:-2] # TODO: fix this
+            vehicleindex_w_moststops = np.argmax([len(v['stops']) for v in output_vehicles])
+            vehicles_w_loads = [v for v in output_vehicles if v['load'] > 0]
+
+            logging.debug('total vehicles: %s' % len(output_vehicles))
+            logging.debug('total vehicles w loads: %s' % len(vehicles_w_loads))
+            logging.debug('total load: %s' % solution[-1])
+            logging.debug('total input load: %s' % self.df.pallets.sum())
+            logging.debug('max stop sequence: %s' % output_vehicles[vehicleindex_w_moststops]['stops'])
             
-        return None
+            for vehicle in vehicles_w_loads:
+                locs = np.array(list(vehicle['stops'])[1:]) - 1
+                self.df.loc[locs, 'vehicle'] = vehicle['vehicle']

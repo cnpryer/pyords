@@ -13,7 +13,7 @@ import pandas as pd
 import numpy as np
 
 
-def get_ortools_solution(dataframe:pd.DataFrame):
+def get_ortools_solution_dataframe(dataframe:pd.DataFrame):
     """
     # scripting out ortools model construction and run
     # df: dataframe input containing every shipment.
@@ -34,6 +34,6 @@ def get_ortools_solution(dataframe:pd.DataFrame):
         depot_index=0, 
         max_solve_seconds=30
     )
-    solution = app.solve()
-
-    return solution
+    app.solve()
+    
+    return app.df
