@@ -229,16 +229,18 @@ get_load_factor(solution)
 # In[ ]:
 
 
-for v in solution:
-    
-    # accounting for insert of origin to matrix input
-    stops = list(np.array(v['stops'][1:-1]) - 1)
-    
-    df.loc[stops, 'vehicle'] = str(v['vehicle'])
-    df.loc[stops, 'sequence'] = list(range(len(stops))) # assumes order matches
-    df.loc[stops, 'stop_distance'] = v['stop_distances'][1:-1]
-    df.loc[stops, 'stop_loads'] = v['stop_loads'][1:-1]
+def process_solution_to_dataframe(solution:list, dataframe:pd.DataFrame):
+    for v in solution:
+        # accounting for insert of origin to matrix input
+        stops = list(np.array(v['stops'][1:-1]) - 1)
 
+        dataframe.loc[stops, 'vehicle'] = str(v['vehicle'])
+        dataframe.loc[stops, 'sequence'] = list(range(len(stops))) # assumes order matches
+        dataframe.loc[stops, 'stop_distance'] = v['stop_distances'][1:-1]
+        dataframe.loc[stops, 'stop_loads'] = v['stop_loads'][1:-1]
+    
+    return dataframe
+    
 # scoring theoretical
 # average capacity utilization of vehicles
 def get_load_factor(solution:list):
@@ -249,9 +251,6 @@ def get_load_factor(solution:list):
 
 def score_load_factor(dataframe:pd.DataFrame):
     return dataframe.groupby('vehicle').pallets.sum().mean()
-
-load_factor = score_load_factor(df)
-assert load_factor == get_load_factor(solution)
 
 # average distance traveled per vehicle
 # NOTE: excluding distances returning to depot for now
@@ -265,41 +264,48 @@ def get_distance_factor(solution:list):
 def score_distance_factor(dataframe:pd.DataFrame):
     return dataframe.groupby('vehicle').stop_distance.sum().mean()
 
-distance_factor = score_distance_factor(df)
-assert distance_factor == get_distance_factor(solution)
-
 # average distance per stop
 def score_travel_factor(dataframe:pd.DataFrame):
     return None
-
-stop_travel_factor = score_travel_factor(df)
 
 # ratio of one-stop routes to multi-stop 
 # (assumption is that implementation is looking for multi-stops)
 def score_multistop_factor(dataframe:pd.DataFrame):
     return None
 
-multistop_factor = score_multistop_factor(df)
-
 # general service measured in total capacity serviced over total in scope
 def score_multistop_factor(dataframe:pd.DataFrame):
     return None
-
-satisfaction_factor = score_multistop_factor(df)
 
 # scoring practice
 # deviation/distribution of stop distances per route
 def score_erratic_distance_factor(dataframe:pd.DataFrame):
     return None
 
-erratic_distance_factor = score_erratic_distance_factor(df)
-
 # measuring total number of moves across state boarders
 def score_state_crossing_factor(dataframe:pd.DataFrame):
     return None
-    
+
+df = process_solution_to_dataframe(solution, df)
+
+load_factor = score_load_factor(df)
+assert load_factor == get_load_factor(solution)
+
+distance_factor = score_distance_factor(df)
+assert distance_factor == get_distance_factor(solution)
+
+stop_travel_factor = score_travel_factor(df)
+multistop_factor = score_multistop_factor(df)
+satisfaction_factor = score_multistop_factor(df)
+erratic_distance_factor = score_erratic_distance_factor(df)
 crossstate_factor = score_state_crossing_factor(df)
 
-print('load factor:', load_factor)
+print('load_factor:', load_factor)
+print('distance_factor:', distance_factor)
+print('stop_travel_factor:', stop_travel_factor)
+print('multistop_factor:', multistop_factor)
+print('satisfaction_factor:', satisfaction_factor)
+print('erratic_distance_factor:', erratic_distance_factor)
+print('crossstate_factor:', crossstate_factor)
 get_plot(df, 'vehicle')
 
