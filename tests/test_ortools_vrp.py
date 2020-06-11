@@ -26,3 +26,5 @@ def test_dbscan_cvrp():
 
     # TODO: update for pandas output implementation update
     assert df.shape[0] == previous_shape[0] # TODO: update for solution refactor
+    
+    assert df.vehicle.nunique() < len(df) # assumed optimizing for aggregation

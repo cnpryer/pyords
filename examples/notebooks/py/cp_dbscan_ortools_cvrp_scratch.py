@@ -11,6 +11,14 @@ get_ipython().run_line_magic('autoreload', '2')
 # In[ ]:
 
 
+get_ipython().system('pip install pyords --upgrade')
+get_ipython().system('pip install plotly')
+get_ipython().system('pip install ortools --upgrade')
+
+
+# In[ ]:
+
+
 from pyords.cluster.algorithms import DBSCAN
 import plotly.express as pe
 import pandas as pd
@@ -77,7 +85,7 @@ clusters_ranking
 
 
 from pyords.distance.matrix import ovrp_haversine_distance_matrix
-from pyords.solver.helpers import GoogleORCVRP, ovrp_to_df
+from pyords.solver.helpers import OrtoolsCvrpDataFrame, ovrp_to_df
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
