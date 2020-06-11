@@ -58,7 +58,17 @@ df.head()
 # In[ ]:
 
 
-pe.scatter_geo(df, lat='latitude', lon='longitude', size='pallets', scope='usa')
+def get_plot(dataframe:pd.DataFrame, colors:str=None):
+    return pe.scatter_geo(
+        dataframe, 
+        lat='latitude', 
+        lon='longitude', 
+        size='pallets',
+        color=colors,
+        scope='usa'
+    )
+
+get_plot(df)
 
 
 # ## Preprocessing
@@ -127,7 +137,7 @@ manager = pywrapcp.RoutingIndexManager(len(distances), len(vehicles), 0)
 def distance_callback(i:int, j:int):
     """index of from (i) and to (j)"""
     node_i = manager.IndexToNode(i)
-    node_j = manager.Inde-xToNode(j)
+    node_j = manager.IndexToNode(j)
     
     return distances[node_i][node_j]
 
@@ -167,26 +177,22 @@ def get_solution():
     solution = []
     for vehicle in range(len(vehicles)):
         i = model.Start(vehicle)
-        info = {'vehicle': vehicle, 'route': '', 'stops': set()}
-        route_distance = 0
-        route_load = 0
+        info = {'vehicle': vehicle, 'stops': list(), 'stop_distances': [0],
+                'stop_loads': list()}
+
         while not model.IsEnd(i):
             node = manager.IndexToNode(i)
-            route_load += demand[node]
-            info['route'] += ' {0} Load({1})'.format(node, route_load)
-            previous_i = i
+            info['stops'].append(node)
+            info['stop_loads'].append(demand[node])
+            
+            previous_i = int(i)
             i = assignment.Value(model.NextVar(i))
-            route_distance += model.GetArcCostForVehicle(
-                previous_i, i, vehicle)
-            info['stops'].add(node)
-        info['route'] += ' {0} Load({1})'.format(
-            manager.IndexToNode(i), route_load)
-        info['route'] = info['route'][1:] # strip leading zero
-        info['dist'] = route_distance
-        info['load'] = route_load
+            info['stop_distances'].append(model.GetArcCostForVehicle(previous_i, i, vehicle))
+        
+        # add return to depot to align with solution data
+        info['stops'].append(0)
+        info['stop_loads'].append(0)
         solution.append(info)
-        total_distance += route_distance
-        total_load += route_load
         
     return solution
 
@@ -195,16 +201,30 @@ solution = get_solution()
 assert len(solution) > 0 # TODO: create better solution testing
 
 vehicleindex_w_moststops = np.argmax([len(v['stops']) for v in solution])
-vehicles_w_loads = [v for v in solution if v['load'] > 0]
+vehicles_w_loads = [v for v in solution if sum(v['stop_loads']) > 0]
 print('total vehicles: %s' % len(solution))
 print('total vehicles w loads: %s' % len(vehicles_w_loads))
 #print('total load: %s' % solution[-1])
 print('total input load: %s' % demand.sum())
-print('max stop sequence: %s' % output_vehicles[vehicleindex_w_moststops]['stops'])
+print('max stop sequence: %s' % solution[vehicleindex_w_moststops]['stops'])
 
 
 # ## Post-processing
-# **Scoring** a solution against a standardized formula/method will allow for more comprehensive testing, debugging, and model tuning. Scoring should be broken down into a **theory score** and a **practical score**. Theory scores will utilize theoretical expectations of vrp solutions (some assumptions about implmentations needs to be made). The practical score will measure how implementable a solution is with respect to certain real-world expectations.  
+# **Scoring** a solution against a standardized formula/method will allow for more comprehensive testing, debugging, and model tuning. Scoring should be broken down into a **theory score** and a **practical score**. Theory scores will utilize theoretical expectations of vrp solutions (some assumptions about implementations needs to be made). The practical score will measure how implementable a solution is with respect to certain real-world expectations.  
+# 
+# For the sake of simplicity I'll use pandas as my target format and align scoring to get functions that pull from standard solution structs.
+
+# In[ ]:
+
+
+distance_factor
+
+
+# In[ ]:
+
+
+get_load_factor(solution)
+
 
 # In[ ]:
 
@@ -212,22 +232,41 @@ print('max stop sequence: %s' % output_vehicles[vehicleindex_w_moststops]['stops
 for v in solution:
     
     # accounting for insert of origin to matrix input
-    stops = np.array(list(v['stops'])[1:]) - 1
+    stops = list(np.array(v['stops'][1:-1]) - 1)
     
-    df.loc[stops, 'vehicle'] = v['vehicle']
+    df.loc[stops, 'vehicle'] = str(v['vehicle'])
+    df.loc[stops, 'sequence'] = list(range(len(stops))) # assumes order matches
+    df.loc[stops, 'stop_distance'] = v['stop_distances'][1:-1]
+    df.loc[stops, 'stop_loads'] = v['stop_loads'][1:-1]
 
 # scoring theoretical
-# average capacity utilization of a vehicle
+# average capacity utilization of vehicles
+def get_load_factor(solution:list):
+    total_loads = sum([sum(s['stop_loads']) for s in solution])
+    total_utilized_vehicles = len([s for s in solution if len(s['stops'][1:-1]) > 0])
+    
+    return total_loads/total_utilized_vehicles
+
 def score_load_factor(dataframe:pd.DataFrame):
-    return None
+    return dataframe.groupby('vehicle').pallets.sum().mean()
 
 load_factor = score_load_factor(df)
+assert load_factor == get_load_factor(solution)
 
 # average distance traveled per vehicle
+# NOTE: excluding distances returning to depot for now
+# need to refactor for this.
+def get_distance_factor(solution:list):
+    total_distances = sum([sum(s['stop_distances'][:-1]) for s in solution])
+    total_utilized_vehicles = len([s for s in solution if len(s['stops'][1:-1]) > 0])
+    
+    return total_distances/total_utilized_vehicles
+
 def score_distance_factor(dataframe:pd.DataFrame):
-    return None
+    return dataframe.groupby('vehicle').stop_distance.sum().mean()
 
 distance_factor = score_distance_factor(df)
+assert distance_factor == get_distance_factor(solution)
 
 # average distance per stop
 def score_travel_factor(dataframe:pd.DataFrame):
@@ -260,4 +299,7 @@ def score_state_crossing_factor(dataframe:pd.DataFrame):
     return None
     
 crossstate_factor = score_state_crossing_factor(df)
+
+print('load factor:', load_factor)
+get_plot(df, 'vehicle')
 
