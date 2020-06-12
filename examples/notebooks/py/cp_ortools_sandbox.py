@@ -245,21 +245,21 @@ def get_solution_from_dataframe(dataframe:pd.DataFrame):
     model = get_model(manager)
     pipe = MyPipe(manager, model)
     search_params = get_search_params()
-    assignment = pipe.add_distances(distances).add_vehicles(vehicles)        .add_demand(demand)        .run(search_params) 
+    assignment = pipe.add_distances(distances)        .add_vehicles(vehicles)        .add_demand(demand)        .run(search_params)
     
     return pipe.get_solution(assignment)
         
-solution = get_solution_from_dataframe(df)
+test = get_solution_from_dataframe(df)
 
-assert len(solution) > 0 # TODO: create better solution testing
+assert len(test) > 0 # TODO: create better solution testing
 
-vehicleindex_w_moststops = np.argmax([len(v['stops']) for v in solution])
+vehicleindex_w_moststops = np.argmax([len(v['stops']) for v in test])
 vehicles_w_loads = [v for v in solution if sum(v['stop_loads']) > 0]
-print('total vehicles: %s' % len(solution))
+print('total vehicles: %s' % len(test))
 print('total vehicles w loads: %s' % len(vehicles_w_loads))
 #print('total load: %s' % solution[-1])
 #print('total input load: %s' % demand.sum())
-print('max stop sequence: %s' % solution[vehicleindex_w_moststops]['stops'])
+print('max stop sequence: %s' % test[vehicleindex_w_moststops]['stops'])
 
 
 # ## Post-processing
@@ -270,6 +270,79 @@ print('max stop sequence: %s' % solution[vehicleindex_w_moststops]['stops'])
 # In[ ]:
 
 
+class CheckerPipe:
+    def __init__(self, solution, dataframe:pd.DataFrame):
+        self.solution = solution
+        self.dataframe = dataframe
+    
+    # scoring theoretical
+    # average capacity utilization of vehicles
+    def get_load_factor(self):
+        total_loads = sum([sum(s['stop_loads']) for s in self.solution])
+        total_utilized_vehicles = len([s for s in self.solution if len(s['stops'][1:-1]) > 0])
+
+        return total_loads/total_utilized_vehicles
+
+    def score_load_factor(self):
+        return self.dataframe.groupby('vehicle').pallets.sum().mean()
+
+    # average distance traveled per vehicle
+    # NOTE: excluding distances returning to depot for now
+    # need to refactor for this.
+    def get_distance_factor(self):
+        total_distances = sum([sum(s['stop_distances'][:-1]) for s in self.solution])
+        total_utilized_vehicles = len([s for s in self.solution if len(s['stops'][1:-1]) > 0])
+
+        return total_distances/total_utilized_vehicles
+
+    def score_distance_factor(self):
+        return self.dataframe.groupby('vehicle').stop_distance.sum().mean()
+
+    # average distance per stop
+    def score_travel_factor(self):
+        return None
+
+    # ratio of one-stop routes to multi-stop 
+    # (assumption is that implementation is looking for multi-stops)
+    def score_multistop_factor(self):
+        return None
+
+    # general service measured in total capacity serviced over total in scope
+    def score_multistop_factor(self):
+        return None
+
+    # scoring practice
+    # deviation/distribution of stop distances per route
+    def score_erratic_distance_factor(self):
+        return None
+
+    # measuring total number of moves across state boarders
+    def score_state_crossing_factor(self):
+        return None
+    
+    def psuedo_test(self):        
+        load_factor = self.score_load_factor()
+        assert load_factor == self.get_load_factor()
+
+        distance_factor = self.score_distance_factor()
+        assert distance_factor == self.get_distance_factor()
+
+        stop_travel_factor = self.score_travel_factor()
+        multistop_factor = self.score_multistop_factor()
+        satisfaction_factor = self.score_multistop_factor()
+        erratic_distance_factor = self.score_erratic_distance_factor()
+        crossstate_factor = self.score_state_crossing_factor()
+        
+        self.info = {
+            'load_factor:': load_factor,
+            'distance_factor:': distance_factor,
+            'stop_travel_factor:': stop_travel_factor,
+            'multistop_factor:': multistop_factor,
+            'satisfaction_factor:': satisfaction_factor,
+            'erratic_distance_factor:': erratic_distance_factor,
+            'crossstate_factor:': crossstate_factor
+        }
+
 def process_solution_to_dataframe(solution:list, dataframe:pd.DataFrame):
     for v in solution:
         # accounting for insert of origin to matrix input
@@ -279,79 +352,120 @@ def process_solution_to_dataframe(solution:list, dataframe:pd.DataFrame):
         dataframe.loc[stops, 'sequence'] = list(range(len(stops))) # assumes order matches
         dataframe.loc[stops, 'stop_distance'] = v['stop_distances'][1:-1]
         dataframe.loc[stops, 'stop_loads'] = v['stop_loads'][1:-1]
+        
+    checks = CheckerPipe(solution, dataframe)
+    checks.psuedo_test()
     
-    return dataframe
-    
-# scoring theoretical
-# average capacity utilization of vehicles
-def get_load_factor(solution:list):
-    total_loads = sum([sum(s['stop_loads']) for s in solution])
-    total_utilized_vehicles = len([s for s in solution if len(s['stops'][1:-1]) > 0])
-    
-    return total_loads/total_utilized_vehicles
+    return dataframe        
 
-def score_load_factor(dataframe:pd.DataFrame):
-    return dataframe.groupby('vehicle').pallets.sum().mean()
-
-# average distance traveled per vehicle
-# NOTE: excluding distances returning to depot for now
-# need to refactor for this.
-def get_distance_factor(solution:list):
-    total_distances = sum([sum(s['stop_distances'][:-1]) for s in solution])
-    total_utilized_vehicles = len([s for s in solution if len(s['stops'][1:-1]) > 0])
-    
-    return total_distances/total_utilized_vehicles
-
-def score_distance_factor(dataframe:pd.DataFrame):
-    return dataframe.groupby('vehicle').stop_distance.sum().mean()
-
-# average distance per stop
-def score_travel_factor(dataframe:pd.DataFrame):
-    return None
-
-# ratio of one-stop routes to multi-stop 
-# (assumption is that implementation is looking for multi-stops)
-def score_multistop_factor(dataframe:pd.DataFrame):
-    return None
-
-# general service measured in total capacity serviced over total in scope
-def score_multistop_factor(dataframe:pd.DataFrame):
-    return None
-
-# scoring practice
-# deviation/distribution of stop distances per route
-def score_erratic_distance_factor(dataframe:pd.DataFrame):
-    return None
-
-# measuring total number of moves across state boarders
-def score_state_crossing_factor(dataframe:pd.DataFrame):
-    return None
-
-def postprocess_dataframe(dataframe:pd.DataFrame):
-    # TODO: abstraction & testing
-
-    load_factor = score_load_factor(dataframe)
-    assert load_factor == get_load_factor(solution)
-
-    distance_factor = score_distance_factor(dataframe)
-    assert distance_factor == get_distance_factor(solution)
-
-    stop_travel_factor = score_travel_factor(dataframe)
-    multistop_factor = score_multistop_factor(dataframe)
-    satisfaction_factor = score_multistop_factor(dataframe)
-    erratic_distance_factor = score_erratic_distance_factor(dataframe)
-    crossstate_factor = score_state_crossing_factor(dataframe)
-
-    print('load_factor:', load_factor)
-    print('distance_factor:', distance_factor)
-    print('stop_travel_factor:', stop_travel_factor)
-    print('multistop_factor:', multistop_factor)
-    print('satisfaction_factor:', satisfaction_factor)
-    print('erratic_distance_factor:', erratic_distance_factor)
-    print('crossstate_factor:', crossstate_factor)
-    
-    return get_plot(dataframe, 'vehicle')
-
+solution = get_solution_from_dataframe(df)
 df = process_solution_to_dataframe(solution, df)
-postprocess_dataframe(df)
+get_plot(df, 'vehicle')
+
+
+# ## using clusters to reduce node pools
+# using dbscan we can select a chain-like cluster of nodes based on logic abstraction such as euclidean distance.
+
+# In[ ]:
+
+
+class DBSCAN:
+    def __init__(self, x, y, epsilon=0.5, minpts=2, viz=None):
+        self.epsilon = epsilon
+        self.minpts = minpts
+        self.viz = viz
+
+    def to_dict(self):
+        _dict = {'epsilon': self.epsilon, 'minpts': self.minpts}
+        try:
+            _dict['n X'] = len(self.X)
+        except:
+            logging.warning('X has not been set.')
+        return _dict
+
+    def fit(self, x, y):
+        self.X = list(zip(x, y))
+        self.clusters = np.zeros(len(self.X), dtype=np.int32)
+        if self.viz:
+            self.viz.x = x
+            self.viz.y = y
+            self.viz.update(self.clusters)
+
+    @staticmethod
+    def get_neighbors(X, i, epsilon):
+        neighbors = []
+        for j in range(0, len(X)):
+            a = np.array(X[i])
+            b = np.array(X[j])
+            if np.linalg.norm(a-b) < epsilon:
+                neighbors.append(j)
+        return neighbors
+
+    def build_cluster(self, i, neighbors, cluster):
+        self.clusters[i] = cluster
+        for j in neighbors:
+            if self.clusters[j] == -1:
+                self.clusters[j] = cluster
+            elif self.clusters[j] == 0:
+                self.clusters[j] = cluster
+                points = self.get_neighbors(self.X, j, self.epsilon)
+                if len(points) >= self.minpts:
+                    neighbors += points
+
+    def cluster(self, x=None, y=None):
+        if x is None or y is None:
+            X = self.X
+        else:
+            X = list(zip(x, y))
+
+        cluster = 0
+        for i in range(0, len(X)):
+            if not self.clusters[i] == 0:
+                continue
+            points = self.get_neighbors(X, i, self.epsilon)
+            if len(points) < self.minpts:
+                self.clusters[i] = -1
+            else:
+                cluster += 1
+                self.build_cluster(i, points, cluster)
+            if self.viz:
+                self.viz.update(self.clusters)
+
+def get_dbscan_clusters(dataframe:pd.DataFrame):
+    """
+      weight,pallets,zipcode,latitude,longitude
+      18893,24,46168,39.6893,-86.3919
+      19599,25,46168,39.6893,-86.3919
+    
+    return df with clusters col
+    """
+    epsilon = 0.79585 # approximate degree delta for 50 miles
+    minpts = 2 # at least cluster 2
+
+    # simplify euclidean distance calculation by projecting to positive vals
+    x = dataframe.latitude.values + 90
+    y = dataframe.longitude.values + 180
+
+    dbscan = DBSCAN(epsilon, minpts)
+    dbscan.fit(x, y)
+    dbscan.cluster()
+
+    return dbscan.clusters
+
+df_dbscan = df.drop(columns=['vehicle']).copy()
+df_dbscan['cluster'] = get_dbscan_clusters(df_dbscan)
+
+results = pd.DataFrame(columns=df_dbscan.columns.tolist())
+
+# TODO: optimize
+for cluster in df.cluster.unique():
+    clustered_df = df[df.cluster == cluster].copy().reset_index(drop=True)
+    solution = get_solution_from_dataframe(clustered_df)
+    clustered_df = process_solution_to_dataframe(solution, clustered_df)
+    results = results.append(clustered_df, sort=False)
+
+results.pallets = results.pallets.astype(int)
+    
+df_dbscan = results
+get_plot(df_dbscan, 'vehicle')
 
