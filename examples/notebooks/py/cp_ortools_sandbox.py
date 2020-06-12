@@ -281,7 +281,7 @@ class CheckerStage:
         total_loads = sum([sum(s['stop_loads']) for s in self.solution])
         total_utilized_vehicles = len([s for s in self.solution if len(s['stops'][1:-1]) > 0])
 
-        return total_loads/total_utilized_vehicles
+        return total_loads / total_utilized_vehicles
 
     def score_load_factor(self):
         return self.dataframe.groupby('vehicle').pallets.sum().mean()
@@ -291,12 +291,12 @@ class CheckerStage:
     # need to refactor for this.
     def get_distance_factor(self):
         total_distances = sum([sum(s['stop_distances'][:-1]) for s in self.solution])
-        total_utilized_vehicles = len([s for s in self.solution if len(s['stops'][1:-1]) > 0])
+        total_stops = sum([len(s['stops'][1:-1]) for s in self.solution])
 
-        return total_distances/total_utilized_vehicles
+        return total_distances / total_stops
 
     def score_distance_factor(self):
-        return self.dataframe.groupby('vehicle').stop_distance.sum().mean()
+        return self.dataframe.stop_distance.mean()
 
     # average distance per stop
     def score_travel_factor(self):
@@ -472,11 +472,17 @@ get_plot(df_dbscan, 'vehicle')
 # In[ ]:
 
 
-dbscan_checks.get_df_info()
+df_dbscan[df_dbscan.vehicle == '1-6']
 
 
 # In[ ]:
 
 
 checks.get_df_info()
+
+
+# In[ ]:
+
+
+dbscan_checks.get_df_info()
 
