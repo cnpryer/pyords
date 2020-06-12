@@ -145,9 +145,7 @@ class MyPipe:
     def __init__(self, manager, model):
         self.manager = manager
         self.model = model
-        self.model.SetArcCostEvaluatorOfAllVehicles(
-            model.RegisterTransitCallback(self.distance_callback)
-        )
+        self.distances = None
         self.vehicles = None
         self.demand = None
         
@@ -156,7 +154,20 @@ class MyPipe:
         node_i = self.manager.IndexToNode(i)
         node_j = self.manager.IndexToNode(j)
 
-        return distances[node_i][node_j]
+        return self.distances[node_i][node_j]
+    
+    def set_distance_callback(self):
+        self.model.SetArcCostEvaluatorOfAllVehicles(
+            self.model.RegisterTransitCallback(self.distance_callback)
+        )
+        
+        return self
+    
+    def add_distances(self, distances):
+        self.distances = distances
+        self.set_distance_callback()
+        
+        return self
     
     def demand_callback(self, i:int):
         """capacity constraint"""
@@ -234,7 +245,7 @@ def get_solution_from_dataframe(dataframe:pd.DataFrame):
     model = get_model(manager)
     pipe = MyPipe(manager, model)
     search_params = get_search_params()
-    assignment = pipe.add_vehicles(vehicles).add_demand(demand).run(search_params) 
+    assignment = pipe.add_distances(distances).add_vehicles(vehicles)        .add_demand(demand)        .run(search_params) 
     
     return pipe.get_solution(assignment)
         
