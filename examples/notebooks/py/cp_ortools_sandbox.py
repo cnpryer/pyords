@@ -254,7 +254,7 @@ test = get_solution_from_dataframe(df)
 assert len(test) > 0 # TODO: create better solution testing
 
 vehicleindex_w_moststops = np.argmax([len(v['stops']) for v in test])
-vehicles_w_loads = [v for v in solution if sum(v['stop_loads']) > 0]
+vehicles_w_loads = [v for v in test if sum(v['stop_loads']) > 0]
 print('total vehicles: %s' % len(test))
 print('total vehicles w loads: %s' % len(vehicles_w_loads))
 #print('total load: %s' % solution[-1])
@@ -270,7 +270,7 @@ print('max stop sequence: %s' % test[vehicleindex_w_moststops]['stops'])
 # In[ ]:
 
 
-class CheckerPipe:
+class CheckerStage:
     def __init__(self, solution, dataframe:pd.DataFrame):
         self.solution = solution
         self.dataframe = dataframe
@@ -320,28 +320,22 @@ class CheckerPipe:
     def score_state_crossing_factor(self):
         return None
     
-    def psuedo_test(self):        
-        load_factor = self.score_load_factor()
-        assert load_factor == self.get_load_factor()
-
-        distance_factor = self.score_distance_factor()
-        assert distance_factor == self.get_distance_factor()
-
-        stop_travel_factor = self.score_travel_factor()
-        multistop_factor = self.score_multistop_factor()
-        satisfaction_factor = self.score_multistop_factor()
-        erratic_distance_factor = self.score_erratic_distance_factor()
-        crossstate_factor = self.score_state_crossing_factor()
-        
-        self.info = {
-            'load_factor:': load_factor,
-            'distance_factor:': distance_factor,
-            'stop_travel_factor:': stop_travel_factor,
-            'multistop_factor:': multistop_factor,
-            'satisfaction_factor:': satisfaction_factor,
-            'erratic_distance_factor:': erratic_distance_factor,
-            'crossstate_factor:': crossstate_factor
+    def get_df_info(self):
+        return {
+            'load_factor': self.score_load_factor(),
+            'distance_factor': self.score_distance_factor(),
+            'stop_travel_factor': self.score_travel_factor(),
+            'multistop_factor': self.score_multistop_factor(),
+            'satisfaction_factor': self.score_multistop_factor(),
+            'erratic_distance_factor': self.score_erratic_distance_factor(),
+            'crossstate_factor': self.score_state_crossing_factor()
         }
+    
+    def psuedo_test(self):
+        info = self.get_df_info()
+        
+        assert info['load_factor'] == self.get_load_factor()
+        assert info['distance_factor'] == self.get_distance_factor()
 
 def process_solution_to_dataframe(solution:list, dataframe:pd.DataFrame):
     for v in solution:
@@ -352,14 +346,16 @@ def process_solution_to_dataframe(solution:list, dataframe:pd.DataFrame):
         dataframe.loc[stops, 'sequence'] = list(range(len(stops))) # assumes order matches
         dataframe.loc[stops, 'stop_distance'] = v['stop_distances'][1:-1]
         dataframe.loc[stops, 'stop_loads'] = v['stop_loads'][1:-1]
-        
-    checks = CheckerPipe(solution, dataframe)
-    checks.psuedo_test()
     
     return dataframe        
 
 solution = get_solution_from_dataframe(df)
 df = process_solution_to_dataframe(solution, df)
+
+checks = CheckerStage(solution, df)
+checks.psuedo_test()
+print(checks.get_df_info())
+
 get_plot(df, 'vehicle')
 
 
@@ -458,14 +454,29 @@ df_dbscan['cluster'] = get_dbscan_clusters(df_dbscan)
 results = pd.DataFrame(columns=df_dbscan.columns.tolist())
 
 # TODO: optimize
-for cluster in df.cluster.unique():
-    clustered_df = df[df.cluster == cluster].copy().reset_index(drop=True)
+for cluster in df_dbscan.cluster.unique():
+    clustered_df = df_dbscan[df_dbscan.cluster == cluster].copy().reset_index(drop=True)
     solution = get_solution_from_dataframe(clustered_df)
     clustered_df = process_solution_to_dataframe(solution, clustered_df)
+    clustered_df.vehicle = str(int(cluster)) + '-' + clustered_df.vehicle.astype(int)        .astype(str)
     results = results.append(clustered_df, sort=False)
 
 results.pallets = results.pallets.astype(int)
     
 df_dbscan = results
+dbscan_checks = CheckerStage(solution=None, dataframe=df_dbscan)
+print(dbscan_checks.get_df_info())
 get_plot(df_dbscan, 'vehicle')
+
+
+# In[ ]:
+
+
+dbscan_checks.get_df_info()
+
+
+# In[ ]:
+
+
+checks.get_df_info()
 
