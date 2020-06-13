@@ -52,20 +52,10 @@
 # In[ ]:
 
 
-get_ipython().system('pip install ortools --upgrade')
-
-
-# In[ ]:
-
-
 import plotly.express as pe
 import pandas as pd
 import numpy as np
 import os
-
-this_dir = os.path.abspath('')
-root_dir = os.path.dirname(this_dir)
-print(root_dir)
 
 
 # ## reading input shipment data
@@ -78,13 +68,7 @@ df = pd.read_csv('../../tests/vrp_testing_data.csv')
 
 required_cols = ['weight', 'pallets', 'zipcode']
 for col in required_cols: assert col in df.columns
-
-df.head()
-
-
-# In[ ]:
-
-
+    
 def get_plot(dataframe:pd.DataFrame, colors:str=None):
     return pe.scatter_geo(
         dataframe, 
@@ -107,18 +91,27 @@ get_plot(df)
 
 from haversine import haversine, Unit
 
-def get_distance_matrix_from_dataframe(origins:list, dataframe:pd.DataFrame):
-    # select an origin node
-
+def create_distances_matrix(origins:list, latitudes:list, longitudes:list):
     distances = []
-    for coords0 in origins + list(zip(dataframe.latitude, dataframe.longitude)):
+    destinations = list(zip(latitudes, longitudes))
+    for coords0 in origins + destinations:
         row = []
-        for coords1 in origins + list(zip(df.latitude, df.longitude)):
+        for coords1 in origins + destinations:
             distance = haversine(coords0, coords1, unit=Unit.MILES)
             row.append(distance)
         distances.append(row)
         
     return distances
+
+def test_create_distances_matrix():
+    origins = [(0, 1)]
+    latitudes = [1, 2, 3, 4]
+    longitudes = [1, 2, 3, 4]
+    matrix = create_distances_matrix(origins, latitudes, longitudes)
+    
+    assert len(matrix) == len(origins) + len(latitudes)
+    
+test_create_distances_matrix()
 
 
 # ### Additional Processing
@@ -128,55 +121,6 @@ def get_distance_matrix_from_dataframe(origins:list, dataframe:pd.DataFrame):
 # 
 # #### using clusters to reduce node pools
 # using dbscan we can select a chain-like cluster of nodes based on logic abstraction such as euclidean distance.
-
-# In[ ]:
-
-
-def get_closest_clusters(x:list, y:list, clusters:list):
-    """
-    Takes a list of x, a list of y, and a list of clusters to
-    process clusters for x, y without an assigned cluster.
-    To accomplish this the function calculates the euclidean
-    distance to every node with a cluster. It will then assign
-    the found node's cluster as its own.
-    
-    x: list-like of x coordinates
-    y: list-like of y coordinates
-    clusters: list-like of clusters assigned
-    
-    return list of clusters
-    """
-    c = list(clusters)
-    
-    positions = list(range(len(c)))
-    missing_clusters = [i for i in positions if pd.isnull(c[i])]
-    has_clusters = [i for i in positions if i not in missing_clusters]
-    
-    x_copy = np.array(x, dtype=float)
-    x_copy[missing_clusters] = np.inf
-
-    y_copy = np.array(y, dtype=float)
-    y_copy[missing_clusters] = np.inf
-    
-    for i in missing_clusters:
-        x_deltas = abs(x[i] - x_copy)
-        y_deltas = abs(y[i] - y_copy)
-        deltas = x_deltas + y_deltas
-        
-        c[i] = c[np.argmin(deltas)]
-    
-    return c
-
-def test_get_closest_clusters():
-    old_clusters = [1, 2, 3, None]
-    new_clusters = get_closest_clusters([1, 2, 3, 4], [1, 2, 3, 4], old_clusters)
-    
-    assert len(old_clusters) == len(new_clusters)
-    assert old_clusters != new_clusters
-    assert new_clusters[-1] == 3 #hardcoded
-
-test_get_closest_clusters()
-
 
 # In[ ]:
 
@@ -243,33 +187,93 @@ class DBSCAN:
             if self.viz:
                 self.viz.update(self.clusters)
 
-def get_clusters(dataframe:pd.DataFrame):
+def add_closest_clusters(x:list, y:list, clusters:list):
     """
-      weight,pallets,zipcode,latitude,longitude
-      18893,24,46168,39.6893,-86.3919
-      19599,25,46168,39.6893,-86.3919
+    Takes a list of x, a list of y, and a list of clusters to
+    process clusters for x, y without an assigned cluster.
+    To accomplish this the function calculates the euclidean
+    distance to every node with a cluster. It will then assign
+    the found node's cluster as its own.
     
-    return df with clusters col
+    x: list-like of x coordinates
+    y: list-like of y coordinates
+    clusters: list-like of clusters assigned
+    
+    return list of clusters
     """
+    c = list(clusters)
+    
+    positions = list(range(len(c)))
+    missing_clusters = [i for i in positions if pd.isnull(c[i])]
+    has_clusters = [i for i in positions if i not in missing_clusters]
+    
+    x_copy = np.array(x, dtype=float)
+    x_copy[missing_clusters] = np.inf
+
+    y_copy = np.array(y, dtype=float)
+    y_copy[missing_clusters] = np.inf
+    
+    for i in missing_clusters:
+        x_deltas = abs(x[i] - x_copy)
+        y_deltas = abs(y[i] - y_copy)
+        deltas = x_deltas + y_deltas
+        
+        c[i] = c[np.argmin(deltas)]
+    
+    return c
+
+def create_dbscan_basic(x:list, y:list):
     epsilon = 0.79585 # approximate degree delta for 50 miles
     minpts = 2 # at least cluster 2
-
-    # simplify euclidean distance calculation by projecting to positive vals
-    x = dataframe.latitude.values + 90
-    y = dataframe.longitude.values + 180
 
     dbscan = DBSCAN(epsilon, minpts)
     dbscan.fit(x, y)
     dbscan.cluster()
     
+    return dbscan
+                
+def create_dbscan_expanded_clusters(x:list, y:list):   
+    dbscan = create_dbscan_basic(x, y)
+    
     # add those without an assigned cluster
     # to their closest cluster
     clusters = [c if int(c) >= 0 else None for c in dbscan.clusters]
-    clusters = get_closest_clusters(x, y, clusters)
+    clusters = add_closest_clusters(x, y, clusters)
     
     return clusters
 
-df['cluster'] = get_clusters(df)
+def test_add_closest_clusters():
+    old_clusters = [1, 2, 3, None]
+    new_clusters = add_closest_clusters([1, 2, 3, 4], [1, 2, 3, 4], old_clusters)
+    
+    assert len(old_clusters) == len(new_clusters)
+    assert old_clusters != new_clusters
+    assert new_clusters[-1] == 3 #hardcoded
+
+def test_create_dbscan_basic():
+    x, y = [1, 2, 3], [1, 2, 3]
+    tdbscan = create_dbscan_basic(x, y)
+    
+    assert len(tdbscan.clusters) > 0
+    assert len(tdbscan.clusters) == len(x)
+    
+def test_create_dbscan_expanded_clusters():
+    x, y = [1, 2, 3], [1, 2, 3]
+    clusters = create_dbscan_expanded_clusters(x, y)
+    
+    assert len(clusters) > 0
+    assert len(clusters) == len(x)
+
+test_add_closest_clusters()
+test_create_dbscan_basic()
+test_create_dbscan_expanded_clusters()
+
+# simplify euclidean distance calculation by projecting to positive vals
+x = df.latitude.values + 90
+y = df.longitude.values + 180
+
+# pyords cluster implementation
+df['cluster'] = create_dbscan_expanded_clusters(x, y)
 df.cluster = df.cluster.astype(str)
 get_plot(df, 'cluster')
 
@@ -293,24 +297,7 @@ from ortools.constraint_solver import pywrapcp
 
 # process vehicles input using total destination nodes count
 # i.e. one truck available per stop
-
-
-# constructing the model
-def get_manager(distances:list, vehicles:list, depot_index:int): 
-    return pywrapcp.RoutingIndexManager(len(distances), len(vehicles), 0)
-
-def get_model(manager):
-    return pywrapcp.RoutingModel(manager)
-
-# config for optimization search
-def get_search_params(max_solve_seconds:int=30):
-    search_parameters = pywrapcp.DefaultRoutingSearchParameters()
-    search_parameters.first_solution_strategy =         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
-    search_parameters.time_limit.seconds = max_solve_seconds
-    
-    return search_parameters
-
-class OrToolsPipe:
+class OrToolsTask:
     def __init__(self, manager, model):
         self.manager = manager
         self.model = model
@@ -399,26 +386,76 @@ class OrToolsPipe:
     def run(self, search_params):
         return self.model.SolveWithParameters(search_params)
     
-def get_solution_from_dataframe(dataframe:pd.DataFrame):
-    # TODO: abstraction & testing
-    origins = [(41.4191, -87.7748)] # assumed depot location for one-depot solutions
-    distances = get_distance_matrix_from_dataframe(origins, dataframe)
-    assert len(distances) == len(origins) + len(dataframe)
+# constructing the model
+def create_manager(n_nodes:int, n_vehicles:int, depot_index:int): 
+    return pywrapcp.RoutingIndexManager(n_nodes, n_vehicles, 0)
+
+def create_model(initialized_manager):
+    return pywrapcp.RoutingModel(initialized_manager)
+
+# config for optimization search
+def create_search_params(max_solve_seconds:int=30):
+    search_parameters = pywrapcp.DefaultRoutingSearchParameters()
+    search_parameters.first_solution_strategy =         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
+    search_parameters.time_limit.seconds = max_solve_seconds
     
-    vehicles = [26 for i in range(len(distances[1:]))]
-    demand = np.insert(dataframe.pallets.values, 0, 0) # using pallets & adding 0 for the depot
+    return search_parameters
+
+# implementation
+def create_origins_input():
+    return [(41.4191, -87.7748)]
+    
+def create_distances_input(latitudes:list, longitudes:list):
+    # TODO: abstraction & testing
+    origins = create_origins_input() # assumed depot location for one-depot solutions
+    distances = create_distances_matrix(origins, latitudes, longitudes)
+    
+    return distances
+
+def create_vehicles_input(distances:list, m:int=26):
+    # build vehicles of m cap by len(distances[1:])
+    return [m for i in range(len(distances[1:]))] 
+
+def create_demand_input(loads:np.array):
+    # unit is load for each node with demand (in this case
+    # only destinations). inserting 0 at the front of the array
+    return np.insert(loads, 0, 0)
+    
+def solve_problem_w_ortools(distances:list, vehicles:list, demand:list):
     max_solve_seconds = 30
     depot_index = 0
     
-    manager = get_manager(distances, vehicles, depot_index)
-    model = get_model(manager)
-    pipe = OrToolsPipe(manager, model)
-    search_params = get_search_params()
-    assignment = pipe.add_distances(distances)        .add_vehicles(vehicles)        .add_demand(demand)        .run(search_params)
+    manager = create_manager(len(distances), len(vehicles), depot_index)
+    model = create_model(manager)
+    task = OrToolsTask(manager, model)
+    search_params = create_search_params()
+    assignment = task.add_distances(distances)        .add_vehicles(vehicles)        .add_demand(demand)        .run(search_params)
     
-    return pipe.get_solution(assignment)
-        
-basic_solution = get_solution_from_dataframe(df)
+    return task.get_solution(assignment)
+
+def init(dataframe:pd.DataFrame):
+    lats, lons = dataframe.latitude, dataframe.longitude
+    matrix = create_distances_input(lats, lons)
+    vehicles = create_vehicles_input(matrix)
+    demand = create_demand_input(dataframe.pallets.values)
+    
+    return matrix, vehicles, demand
+
+def test_model_setup_implementation():
+    lats, lons = [1, 2, 3], [1, 2, 3]
+    origins = create_origins_input()
+    matrix = create_distances_input(lats, lons)
+    vehicles = create_vehicles_input(matrix)
+    demand = create_demand_input([1, 2, 3])
+    
+    assert len(matrix) == len(origins) + len(lats)
+    assert len(vehicles) == len(lats)
+    assert len(demand) == len(matrix)
+
+test_model_setup_implementation()
+
+matrix, vehicles, demand = init(df)
+basic_solution = solve_problem_w_ortools(matrix, vehicles, demand)
 
 assert len(basic_solution) > 0 # TODO: create better solution testing
 
@@ -439,7 +476,7 @@ print('test>> max stop sequence: %s' % basic_solution[vehicleindex_w_moststops][
 # In[ ]:
 
 
-class CheckStage: # TODO: figure out best way to abstract checks & tests here
+class OrToolsChecks: # TODO: figure out best way to abstract checks & tests here
     def __init__(self, solution, dataframe:pd.DataFrame):
         self.solution = solution
         self.dataframe = dataframe
@@ -565,7 +602,7 @@ def process_solution_to_dataframe(solution:list, dataframe:pd.DataFrame):
 
 basic_df = process_solution_to_dataframe(basic_solution, df)
 
-checks = CheckStage(basic_solution, df)
+checks = OrToolsChecks(basic_solution, df)
 checks.psuedo_test()
 print(checks.get_df_info())
 
@@ -584,7 +621,9 @@ results = pd.DataFrame(columns=dbscan_df.columns.tolist())
 # TODO: optimize
 for cluster in dbscan_df.cluster.unique():
     clustered_df = dbscan_df[dbscan_df.cluster == cluster].copy().reset_index(drop=True)
-    solution = get_solution_from_dataframe(clustered_df)
+    
+    matrix, vehicles, demand = init(clustered_df)
+    solution = solve_problem_w_ortools(matrix, vehicles, demand)
     clustered_df = process_solution_to_dataframe(solution, clustered_df)
     clustered_df.vehicle = str(int(cluster)) + '-' + clustered_df.vehicle.astype(int)        .astype(str)
     results = results.append(clustered_df, sort=False)
@@ -592,7 +631,7 @@ for cluster in dbscan_df.cluster.unique():
 results.pallets = results.pallets.astype(int)
     
 dbscan_df = results
-dbscan_checks = CheckStage(solution=None, dataframe=dbscan_df)
+dbscan_checks = OrToolsChecks(solution=None, dataframe=dbscan_df)
 print(dbscan_checks.get_df_info())
 get_plot(dbscan_df, 'vehicle')
 
