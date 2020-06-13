@@ -1,4 +1,4 @@
-from pyords.core.bundles import VrpBundle
+from .core.bundles import VrpBundle
 
 __version__ = '0.0.7'
 

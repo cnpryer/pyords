@@ -1,4 +1,4 @@
-from ..pyords.distance.haversine import (
+from pyords.distance.haversine import (
     pyords_haversine, pyords_haversine_vectorized
 )
 import pandas as pd
