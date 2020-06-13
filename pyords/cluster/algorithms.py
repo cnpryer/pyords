@@ -121,7 +121,7 @@ class DBSCAN:
                 if len(points) >= self.minpts:
                     neighbors += points
 
-    def predict(self, x=None, y=None):
+    def cluster(self, x=None, y=None):
         if x is None or y is None:
             X = self.X
         else:

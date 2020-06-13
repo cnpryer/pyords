@@ -1,4 +1,6 @@
-from ..pyords.distance.haversine import haversine, haversine_vectorized
+from ..pyords.distance.haversine import (
+    pyords_haversine, pyords_haversine_vectorized
+)
 import pandas as pd
 import numpy as np
 
@@ -20,7 +22,7 @@ def test_haversine():
     lon1 = data.origin_lon.values[0]
     lat2 = data.dest_lat.values[0]
     lon2 = data.dest_lon.values[0]
-    distances = haversine(
+    distances = pyords_haversine(
         lat1=lat1,
         lon1=lon1,
         lat2=lat2,
@@ -34,7 +36,7 @@ def test_haversine_vectorized():
     lon1 = data.origin_lon.values
     lat2 = data.dest_lat.values
     lon2 = data.dest_lon.values
-    distances =  haversine_vectorized(
+    distances =  pyords_haversine_vectorized(
         lat1=lat1,
         lon1=lon1,
         lat2=lat2,
