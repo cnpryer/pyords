@@ -22,34 +22,29 @@ import os
 # TODO: all shipments must end at 41.390800, -88.144599
 
 
-# # using pyords for shipment optimization
+# # using pyords bundles for vehicle optimization
 # 
 # ```python
 # import pyords as pyr
 # 
-# df = pd.read_csv('../../tests/vrp_testing_data.csv')
-# vrp = pyr.OrToolsVrpBamboo(df, demand='pallets', inline=True)
-# vrp.map
 # 
-# x = df.latitude
-# y = df.longitude
-# clustering = pyr.DBSCAN(x, y, project_data=True)
-# df['clusters'] = clustering.clusters
+# df = pd.read_csv('my_shipment_data.csv')
+# bundle = pyr.OrVrpBundle(zips=df.zipcodes, demand=df.pallets)
 # 
-# pymap = vrp.swap(df)
-# vrp.show(show_clusters=True)
+# solution = bundle.run( # get list of vehicles from vrp task
+#     depot_index=0, # required
+#     max_vehicle_capacity=26, # default: 26
+#     max_search_seconds=30, # default 30
+#     segment_by=my_clusters, # optional TODO: allow for distributed
+#     return_solution=True # optional
+# )
 # 
-# clustering = clustering.expand('closest')
-# df.clusters = clustering.clusters
+# live_vehicles_returned = [s for s in solution if len(s['stops'][1:-1]) > 0]
 # 
-# vrp = vrp.swap(df)
-# vrp.show(show_clusters=True)
+# assert bundle.vehicles.pull('n.utilized') == len(live_vehicles_returned)
 # 
-# origins = get_my_origins()
-# destinations = vrp.distance_matrix
-# df['solution_1'] = vrp.route(origins, vehicles)
-# 
-# df['solution_2'] = vrp.route(origins, vehicles, limit_by='clusters')
-# 
-# vrp.logs
+# df['vehicles'] = bundle.pull('vehicles')
 # ```
+# 
+# # pyords bundles
+# Bundles are self-contained problem definitions that can be tuned with the pyords tool libraries and other more popular python libraries. Bundles are input-output blueprinted objects for solving problems in a python environment. Bamboo bundles are used to branch pyords functionality from dataframes. Pyords bundle fundementals are similar in nature to tasks. A bundle can be initiated with input and completed with parameters.
