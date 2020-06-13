@@ -40,7 +40,7 @@ import os
 # vrp.show(show_clusters=True)
 # 
 # clustering = clustering.expand('closest')
-# df.clusters = model.clusters
+# df.clusters = clustering.clusters
 # 
 # vrp = vrp.swap(df)
 # vrp.show(show_clusters=True)
