@@ -15,12 +15,12 @@ A library for operations research and data science.
 ## motivation behind the project
 Self-learning:
 
-1. [Open-source software development](https://en.wikipedia.org/wiki/Open-source_software_development).
-2. [Data Science](https://en.wikipedia.org/wiki/Data_science).
-3. [Operations Research](https://en.wikipedia.org/wiki/Operations_research).
-4. [Financial Engineering](https://en.wikipedia.org/wiki/Financial_engineering).
+1. [Open-source software development](https://en.wikipedia.org/wiki/Open-source_software_development)
+2. [Data Science](https://en.wikipedia.org/wiki/Data_science)
+3. [Operations Research](https://en.wikipedia.org/wiki/Operations_research)
+4. [Financial Engineering](https://en.wikipedia.org/wiki/Financial_engineering)
 5. [Visualizations](https://en.wikipedia.org/wiki/Data_visualization) in Python
-or JavaScript.
+or JavaScript
 6. Big splash! [NumPy](https://en.wikipedia.org/wiki/NumPy),
 [Pandas](https://en.wikipedia.org/wiki/Pandas_(software)),
 [D3.js](https://en.wikipedia.org/wiki/D3.js),
@@ -34,12 +34,12 @@ or JavaScript.
 [Supply Chain Guru](https://www.llamasoft.com/products/design/supply-chain-guru/),
 [Keras](https://en.wikipedia.org/wiki/Keras), [Hadoop](https://en.wikipedia.org/wiki/Apache_Hadoop),
 [AWS](https://en.wikipedia.org/wiki/Amazon_Web_Services),
-[GCP](https://en.wikipedia.org/wiki/Google_Cloud_Platform), [Vagrant](https://www.vagrantup.com/).
+[GCP](https://en.wikipedia.org/wiki/Google_Cloud_Platform), [Vagrant](https://www.vagrantup.com/)
 
 # Development & Documentation
 ## pyords ```Bundle```s
 
-```Bundle```s are self-contained problem definitions implemented as modular implementation instances. That's wanna-be fancy for packaged units of code that are very plug-in and play. Contributing to ```Bundle``` development:
+```Bundle```s are self-contained problem definitions implemented as modular instances. That's wanna-be fancy for packaged units of code that are very plug-in and play. Contributing to ```Bundle``` development:
 
 1. Design the problem as a ```Case``` where the ```Case``` can be tested against various ```Bundle```s that solve the problem defined in the ```Case```. For the purposes of this ```README``` we'll use ```VrpVehicleCase```. ```Case```s must help define what is required of a feature implementation (or the improvement of one). For our ```VrpVehicleCase``` we'll assume a set of data and configurations for basic vrp model requirements and a desired output of optimized vehicles to append to our data.
 
@@ -110,7 +110,7 @@ assert orbndl.vehicles.pull('n.utilized') == len(live_vehicles_returned)
 df['vehicles'] = orbndl.pull('vehicle_id')
 ```
 
-## :white_check_mark: Testing pyords ```Bundle```s
+## Testing pyords ```Bundle```s :white_check_mark:
 
 ```python
 import pyords as pyr
