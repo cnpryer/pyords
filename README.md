@@ -88,26 +88,14 @@ import pyords as pyr
 
 df = pd.read_csv('my_shipment_data.csv')
 
+# TODO: implement this bundle (currently not refactored)
 geobndl = pyr.GeoBundle(zipcodes=df.zipcodes)
 lats, lons = geo_bndl.pgeo('US')
 matrix = geobndl.haversine_all_from(origin=origin, 'mi')
 clusters = geobndl.cluster(by='geocodes')
 
-orbndl = pyr.OrBundle(matrix=matrix, demand=df.pallets)
-
-vehicles = orbndl.ortools.vrp( 
-    depot_index=0, # required
-    max_vehicle_capacity=26, # default: 26
-    max_search_seconds=30, # default 30
-    partitions=clusters, # optional TODO: allow for distributed
-    return_solution=True # optional
-)
-
-live_vehicles_returned = [v for v in vehicles if len(v['stops'][1:-1]) > 0]
-
-assert orbndl.vehicles.pull('n.utilized') == len(live_vehicles_returned)
-
-df['vehicles'] = orbndl.pull('vehicle_id')
+vrpbndl = pyr.VrpBundle(matrix=matrix, demand=df.pallets)
+df = vrpbndl.run().cast_solution_to_df(clustered_df)
 ```
 
 ## Testing pyords ```Bundle```s :white_check_mark:
@@ -120,19 +108,22 @@ class VrpVehicleCase:
         'matrix': [[0, 1, 2], [1, 0, 2], [2, 2, 0]],
         'demand': [0, 3, 4],
         'max_vehicle_capacity': 5,
-        'partitions': [1, 1, 1]
+        'partitions': [1, 1, 1],
+        'max_search_seconds': 30
     }
 
     outputs = {
         'vehicle_id': [1, 2]
     }
 
-    implementation = pyr.OrBundle.ortools.vrp
+    implementation = None # TODO: pyr.ortools.vrp
 
-    def run():
-        bndl = pyr.OrBundle(case=VrpVehicleCase)
-
+    def run(self):
+        bndl = pyr.VrpBundle(case=self)
+        
         assert bndl.test()
+
+        return self
 
 if __name__ == '__main__':
     VrpVehicleCase.run()
