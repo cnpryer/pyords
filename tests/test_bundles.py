@@ -22,7 +22,7 @@ class VrpVehicleCase:
         'vehicle_id': [1, 2]
     }
 
-    implementation = None # TODO: pyr.OrBundle.ortools.vrp
+    implementation = None # TODO: pyr.ortools.vrp
 
     def run(self):
         bndl = pyr.VrpBundle(case=self)
